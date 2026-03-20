@@ -128,36 +128,47 @@ Content was rephrased for compliance with licensing restrictions.
 ### Frontend
 | Layer | Technology | Reason |
 |---|---|---|
-| <cite index="7-3">Framework</cite> | <cite index="7-3">Next.js 14 (App Router)</cite> | <cite index="7-3">Single repo for all 3 portals, SSR for performance</cite> |
-| <cite index="7-3">Styling</cite> | <cite index="7-3">Tailwind CSS</cite> | <cite index="7-3">Rapid UI, consistent design system</cite> |
-| <cite index="8-0">Charts</cite> | <cite index="8-0">Recharts</cite> | <cite index="8-0">Insurer dashboard visualizations</cite> |
-| <cite index="8-0">State</cite> | <cite index="8-0">Zustand</cite> | <cite index="8-0">Lightweight, no boilerplate</cite> |
-| <cite index="8-0">Maps</cite> | <cite index="8-0">Leaflet.js</cite> | <cite index="8-0">GPS zone visualization, fraud heatmap</cite> |
+| Framework | Next.js + React + TypeScript | Single repo for all 3 portals, SSR for performance, type safety |
+| Styling | TailwindCSS + shadcn/ui | Rapid UI development, consistent design system |
+| Charts | Recharts + D3.js | Insurer dashboard visualizations, reserve monitoring |
+| State | Zustand | Lightweight, no boilerplate |
+| Maps | Leaflet.js | GPS zone visualization, fraud heatmap |
 
 ### Backend
 | Layer | Technology | Reason |
 |---|---|---|
-| <cite index="8-1">API Server</cite> | <cite index="8-1">FastAPI (Python)</cite> | <cite index="8-1">ML model serving, trigger processing</cite> |
-| <cite index="8-1">Database</cite> | <cite index="8-1">Supabase (PostgreSQL)</cite> | <cite index="8-1">Real-time subscriptions, instant auth, free tier</cite> |
-| <cite index="8-1">Auth</cite> | <cite index="8-1">Supabase Auth</cite> | <cite index="8-1">Worker + admin login, JWT</cite> |
-| <cite index="8-1">Job Queue</cite> | <cite index="8-1">Supabase Edge Functions</cite> | <cite index="8-1">Trigger processing, claim automation</cite> |
-| <cite index="8-1">Cache</cite> | <cite index="8-1">Redis (Upstash)</cite> | <cite index="8-1">API rate limit, trigger dedup</cite> |
+| API Server | Node.js + Express | Fast development, JSON-native |
+| Real-time | Socket.io | Live trigger alerts to insurer dashboard |
+| Scheduling | Node-cron | Weekly premium calculations, trigger polling |
+| Auth | JWT + bcrypt | Secure multi-role access (insurer/worker) |
+| Database | PostgreSQL + TimescaleDB | Relational data + time-series trigger events |
+| Cache | Redis | API rate limit, trigger dedup, session management |
 
 ### ML/AI
-| Component | Technology |
-|---|---|
-| <cite index="8-2">Premium model</cite> | <cite index="8-2">XGBoost (scikit-learn)</cite> |
-| <cite index="8-2">Fraud detection</cite> | <cite index="8-2">Isolation Forest (scikit-learn)</cite> |
-| <cite index="8-2">Claims forecast</cite> | <cite index="8-2">Prophet or simple LSTM (TensorFlow Lite)</cite> |
-| <cite index="8-2">Model serving</cite> | <cite index="8-2">FastAPI endpoint</cite> |
+| Component | Technology | Purpose |
+|---|---|---|
+| ML Framework | Python + scikit-learn + XGBoost | Premium calculation + fraud detection |
+| Time Series | TensorFlow + LSTM | Reserve forecasting model |
+| Anomaly Detection | Isolation Forest | Fraud scoring engine |
+| Model Serving | FastAPI | REST API bridge to Node.js backend |
+| Data Processing | Pandas + NumPy | Feature engineering pipeline |
 
 ### External APIs
 | API | Purpose | Cost |
 |---|---|---|
-| <cite index="8-3">OpenWeatherMap</cite> | <cite index="8-3">Rain + heat triggers</cite> | <cite index="8-3">Free tier (1000 calls/day)</cite> |
-| <cite index="8-3">AQICN</cite> | <cite index="8-3">AQI trigger</cite> | <cite index="8-3">Free tier</cite> |
-| <cite index="8-3">IMD (or mock)</cite> | <cite index="8-3">Flood alerts</cite> | <cite index="8-3">Free / mocked</cite> |
-| <cite index="9-0">Razorpay Test Mode</cite> | <cite index="9-0">Payment simulation</cite> | <cite index="9-0">Free sandbox</cite> |
+| OpenWeatherMap | Rain + heat triggers | Free tier (1000 calls/day) |
+| IMD API | Rainfall, temperature, Red Alert data | Free (government) |
+| CPCB API | AQI data | Free (government) |
+| Google Maps Traffic API | Waterlogging detection | Free tier |
+| Razorpay Test Mode | Payment simulation | Free sandbox |
+
+### Infrastructure
+| Component | Technology |
+|---|---|
+| Hosting | Vercel (frontend) + Render (backend + DB) |
+| Containerization | Docker + Docker Compose |
+| CI/CD | GitHub Actions |
+| Version Control | GitHub |
 
 ---
 
