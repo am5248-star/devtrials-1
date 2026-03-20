@@ -185,7 +185,7 @@ Content was rephrased for compliance with licensing restrictions.
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/gigshield.git
+git clone https://github.com/your-org/devtrials.git
 cd gigshield
 
 # Install frontend dependencies
