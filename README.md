@@ -37,22 +37,22 @@
 <cite index="3-0">GigShield is a three-sided platform serving three stakeholders simultaneously</cite>:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                   GIGSHIELD PLATFORM                    │
-│                                                         │
-│  [Worker App]      [Platform Portal]   [Insurer Dashboard] │
-│  Mobile PWA        Swiggy/Zomato       ShieldLife Admin    │
-│  Enrollment        GPS verification    Reserve monitoring  │
-│  Coverage view     Premium deduction   Loss ratio analytics│
-│  Instant payout    Order data feed     Fraud detection     │
-│                                                         │
-│                  CORE BACKEND API                       │
-│            Policy • Claims • Premium                    │
-│                                                         │
-│  [ML Engine]      [Trigger Engine]     [Fraud Engine]  │
-│  Dynamic pricing  Parametric APIs      GPS spoof +     │
-│  Zone risk score  Auto-claim firing    anomaly detection│
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                   GIGSHIELD PLATFORM                        │
+│                                                             │
+│  [Worker App]      [Platform Portal]   [Insurer Dashboard]  │
+│  Mobile PWA        Swiggy/Zomato       ShieldLife Admin     │
+│  Enrollment        GPS verification    Reserve monitoring   │
+│  Coverage view     Premium deduction   Loss ratio analytics │
+│  Instant payout    Order data feed     Fraud detection      │
+│                                                             │
+│                  CORE BACKEND API                           │
+│            Policy • Claims • Premium                        │
+│                                                             │
+│  [ML Engine]      [Trigger Engine]     [Fraud Engine]       │
+│  Dynamic pricing  Parametric APIs      GPS spoof +          │
+│  Zone risk score  Auto-claim firing    anomaly detection    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
