@@ -7,6 +7,7 @@
 import { config } from '../config';
 import { TriggerEvent, ZoneConfig, MONITORED_ZONES } from './types';
 import { isAlreadyProcessed, markAsProcessed, logTriggerEvent } from './triggerRepository';
+import { AccuWeatherService } from '../lib/accuWeatherService';
 
 interface HeatApiResponse {
   main: {
@@ -78,6 +79,22 @@ export async function checkHeatIndex(): Promise<TriggerEvent[]> {
 
     console.log(`  [${zone.name}] Live Feels-like: ${data.feelsLike}°C (actual: ${data.temp}°C)`);
 
+    // Fetch AccuWeather Forecast as supplemental data
+    let forecastHeadline = 'N/A';
+    try {
+      // Use pre-defined key from MONITORED_ZONES if available
+      const locationKey = zone.accuWeatherKey || await AccuWeatherService.getLocationKey(zone.lat, zone.lon);
+      if (locationKey) {
+        const forecast = await AccuWeatherService.get5DayForecast(locationKey);
+        if (forecast) {
+          forecastHeadline = forecast.Headline.Text;
+          console.log(`  [${zone.name}] AccuWeather Forecast: ${forecastHeadline}`);
+        }
+      }
+    } catch (accuErr) {
+      console.warn(`  [${zone.name}] Failed to fetch AccuWeather supplemental data`);
+    }
+
     const breached = data.feelsLike > threshold;
     const alreadyProcessed = breached ? await isAlreadyProcessed('HEAT_INDEX', zone.id) : false;
 
@@ -94,6 +111,7 @@ export async function checkHeatIndex(): Promise<TriggerEvent[]> {
         zoneName: zone.name,
         actualTemp: data.temp,
         humidity: data.humidity,
+        accuWeatherHeadline: forecastHeadline,
         sustainedHrsRequired: config.triggers.heatIndex.sustainedHrs,
         payoutAmount: breached ? config.triggers.heatIndex.payoutAmount : 0,
         triggerBreached: breached,

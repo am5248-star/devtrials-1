@@ -29,6 +29,10 @@ export const config = {
       key: process.env.AQICN_API_KEY || '',
       baseUrl: 'https://api.waqi.info',
     },
+    accuWeather: {
+      key: process.env.ACCUWEATHER_API_KEY || '',
+      baseUrl: 'https://dataservice.accuweather.com',
+    },
   },
   triggers: {
     pollingIntervalMs: 5 * 60 * 1000, // 5 minutes

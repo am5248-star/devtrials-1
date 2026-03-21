@@ -17,6 +17,8 @@ export interface Trigger {
     weatherDescription?: string;
     aqiCategory?: string;
     actualTemp?: number;
+    minuteCast?: string;
+    accuWeatherHeadline?: string;
   };
 }
 

@@ -7,6 +7,7 @@
 import { config } from '../config';
 import { TriggerEvent, ZoneConfig, MONITORED_ZONES } from './types';
 import { isAlreadyProcessed, markAsProcessed, logTriggerEvent } from './triggerRepository';
+import { AccuWeatherService } from '../lib/accuWeatherService';
 
 interface WeatherApiResponse {
   rain?: { '1h'?: number; '3h'?: number };
@@ -63,6 +64,18 @@ export async function checkRainfall(): Promise<TriggerEvent[]> {
     const rainfall3h = data.rain?.['3h'] || 0;
     console.log(`  [${zone.name}] Live Rainfall 3h: ${rainfall3h}mm`);
 
+    // Fetch AccuWeather MinuteCast as supplemental data
+    let minuteCastSummary = 'N/A';
+    try {
+      const mc = await AccuWeatherService.getMinuteCast(zone.lat, zone.lon);
+      if (mc) {
+        minuteCastSummary = mc.Summary.Phrase;
+        console.log(`  [${zone.name}] MinuteCast: ${minuteCastSummary}`);
+      }
+    } catch (mcErr) {
+      console.warn(`  [${zone.name}] Failed to fetch MinuteCast supplemental data`);
+    }
+
     const breached = rainfall3h > threshold;
     const alreadyProcessed = breached ? await isAlreadyProcessed('RAINFALL', zone.id) : false;
 
@@ -79,6 +92,7 @@ export async function checkRainfall(): Promise<TriggerEvent[]> {
         zoneName: zone.name,
         weatherDescription: data.weather[0]?.description,
         temperature: data.main.temp,
+        minuteCast: minuteCastSummary,
         payoutAmount: breached ? config.triggers.rainfall.payoutAmount : 0,
         triggerBreached: breached,
         duplicateSuppressed: alreadyProcessed,

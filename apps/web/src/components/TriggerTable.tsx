@@ -101,9 +101,27 @@ export default function TriggerTable({ triggers, loading }: TriggerTableProps) {
               return (
                 <TableRow key={row.zone} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors group">
                   <TableCell className="font-display font-black text-foreground px-6 py-5">{row.zone}</TableCell>
-                  <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">{row.latestByType.Rainfall ? Number(row.latestByType.Rainfall.magnitude).toFixed(2) : "-"}</TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">
+                    <div className="flex flex-col">
+                      <span>{row.latestByType.Rainfall ? Number(row.latestByType.Rainfall.magnitude).toFixed(2) : "-"}</span>
+                      {row.latestByType.Rainfall?.metadata?.minuteCast && (
+                        <span className="text-[9px] text-fs-blue/70 font-display uppercase tracking-[0.2px] leading-tight mt-0.5">
+                          {row.latestByType.Rainfall.metadata.minuteCast}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">{row.latestByType.AQI ? Number(row.latestByType.AQI.magnitude).toFixed(0) : "-"}</TableCell>
-                  <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">{row.latestByType.HeatIndex ? Number(row.latestByType.HeatIndex.magnitude).toFixed(2) : "-"}</TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">
+                    <div className="flex flex-col">
+                      <span>{row.latestByType.HeatIndex ? Number(row.latestByType.HeatIndex.magnitude).toFixed(2) : "-"}</span>
+                      {row.latestByType.HeatIndex?.metadata?.accuWeatherHeadline && (
+                        <span className="text-[9px] text-fs-yellow/70 font-display uppercase tracking-[0.2px] leading-tight mt-0.5 max-w-[120px] truncate">
+                          {row.latestByType.HeatIndex.metadata.accuWeatherHeadline}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     {hasActive ? (
                       <Badge className="rounded-lg bg-fs-red text-white border-none flex items-center gap-1.5 w-fit text-[10px] font-black px-2.5 py-1 uppercase shadow-[0_0_10px_rgba(255,59,48,0.25)]">

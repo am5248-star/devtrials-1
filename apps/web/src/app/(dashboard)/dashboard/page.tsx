@@ -16,6 +16,14 @@ export default function DashboardPage() {
   async function init() {
     setLoading(true);
     try {
+      // Trigger a poll to get latest weather data from APIs (including AccuWeather)
+      const { manualPoll } = await import("@/lib/api");
+      try {
+        await manualPoll();
+      } catch (pollErr) {
+        console.warn("Manual poll failed, using existing cache", pollErr);
+      }
+
       const [t, z, h] = await Promise.all([fetchTriggers(), fetchZones(), checkHealth()]);
       setTriggers(t);
       setZones(z);
