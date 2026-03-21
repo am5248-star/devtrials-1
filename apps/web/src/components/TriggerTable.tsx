@@ -56,31 +56,31 @@ export default function TriggerTable({ triggers, loading }: TriggerTableProps) {
   }, [triggers]);
 
   return (
-    <div className="rounded-xl border border-border bg-card/50 backdrop-blur-sm overflow-hidden shadow-sm">
+    <div className="rounded-2xl glass overflow-hidden">
       <Table>
-        <TableHeader className="bg-secondary/30">
-          <TableRow className="hover:bg-transparent border-b border-border">
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider">Zone / Area</TableHead>
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider">
-              <div className="flex items-center gap-2"><Droplets className="size-3" /> Rainfall</div>
+        <TableHeader className="bg-white/[0.03] border-b border-white/[0.1]">
+          <TableRow className="hover:bg-transparent border-none">
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider px-6 h-14">Zone / Area</TableHead>
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider h-14">
+              <div className="flex items-center gap-2"><Droplets className="size-4 text-fs-blue" /> Rainfall</div>
             </TableHead>
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider">
-              <div className="flex items-center gap-2"><Activity className="size-3" /> AQI</div>
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider h-14">
+              <div className="flex items-center gap-2"><Activity className="size-4 text-fs-purple" /> AQI</div>
             </TableHead>
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider">
-              <div className="flex items-center gap-2"><Thermometer className="size-3" /> Heat Index</div>
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider h-14">
+              <div className="flex items-center gap-2"><Thermometer className="size-4 text-fs-yellow" /> Heat Index</div>
             </TableHead>
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider">Status</TableHead>
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider">Source</TableHead>
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider">Payout</TableHead>
-            <TableHead className="font-bold text-primary text-[11px] uppercase tracking-wider text-right">Last Updated</TableHead>
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider h-14">Status</TableHead>
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider h-14">Source</TableHead>
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider h-14">Payout</TableHead>
+            <TableHead className="font-display font-black text-secondary text-[11px] uppercase tracking-wider text-right pr-6 h-14">Last Updated</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {loading ? (
             Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell colSpan={8}><Skeleton className="h-10 w-full rounded-md" /></TableCell>
+              <TableRow key={i} className="border-b border-white/[0.04]">
+                <TableCell colSpan={8}><Skeleton className="h-8 w-full rounded-lg bg-white/[0.03]" /></TableCell>
               </TableRow>
             ))
           ) : zoneRows.length === 0 ? (
@@ -97,39 +97,39 @@ export default function TriggerTable({ triggers, loading }: TriggerTableProps) {
               const hasActive = zoneTriggers.some((z) => z.status === "ACTIVE");
               const maxPayout = zoneTriggers.reduce((acc, z) => Math.max(acc, z.payoutAmount || 0), 0);
               const dataMode = zoneTriggers.every((z) => getDataMode(z.source) === "LIVE") ? "LIVE" : "MOCK";
-              
+
               return (
-                <TableRow key={row.zone} className="border-b border-border/50 hover:bg-foreground/5 transition-colors group">
-                  <TableCell className="font-semibold text-foreground">{row.zone}</TableCell>
-                  <TableCell className="font-mono text-xs opacity-70">{row.latestByType.Rainfall ? Number(row.latestByType.Rainfall.magnitude).toFixed(2) : "-"}</TableCell>
-                  <TableCell className="font-mono text-xs opacity-70">{row.latestByType.AQI ? Number(row.latestByType.AQI.magnitude).toFixed(0) : "-"}</TableCell>
-                  <TableCell className="font-mono text-xs opacity-70">{row.latestByType.HeatIndex ? Number(row.latestByType.HeatIndex.magnitude).toFixed(2) : "-"}</TableCell>
+                <TableRow key={row.zone} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors group">
+                  <TableCell className="font-display font-black text-foreground px-6 py-5">{row.zone}</TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">{row.latestByType.Rainfall ? Number(row.latestByType.Rainfall.magnitude).toFixed(2) : "-"}</TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">{row.latestByType.AQI ? Number(row.latestByType.AQI.magnitude).toFixed(0) : "-"}</TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground/80 font-bold">{row.latestByType.HeatIndex ? Number(row.latestByType.HeatIndex.magnitude).toFixed(2) : "-"}</TableCell>
                   <TableCell>
                     {hasActive ? (
-                      <Badge className="rounded-full bg-warning/10 text-warning border-none flex items-center gap-1 w-fit text-[10px] font-bold">
-                        <ShieldAlert className="size-3" /> ACTIVE
+                      <Badge className="rounded-lg bg-fs-red text-white border-none flex items-center gap-1.5 w-fit text-[10px] font-black px-2.5 py-1 uppercase shadow-[0_0_10px_rgba(255,59,48,0.25)]">
+                        <ShieldAlert className="size-3.5" /> ACTIVE
                       </Badge>
                     ) : (
-                      <Badge className="rounded-full bg-success/10 text-success border-none flex items-center gap-1 w-fit text-[10px] font-bold">
-                        <ShieldCheck className="size-3" /> STABLE
+                      <Badge className="rounded-lg bg-fs-green text-white border-none flex items-center gap-1.5 w-fit text-[10px] font-black px-2.5 py-1 uppercase shadow-[0_0_10px_rgba(40,167,69,0.25)]">
+                        <ShieldCheck className="size-3.5" /> STABLE
                       </Badge>
                     )}
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-col gap-1">
                       <Badge variant="outline" className={cn(
-                        "rounded-full border-none font-bold text-[9px] w-fit px-2 py-0",
-                        dataMode === "LIVE" ? "bg-success/20 text-success" : "bg-warning/20 text-warning"
+                        "rounded-full border-none font-bold text-[8px] w-fit px-2 py-0",
+                        dataMode === "LIVE" ? "bg-success/15 text-success" : "bg-warning/15 text-warning"
                       )}>
                         {dataMode}
                       </Badge>
-                      <span className="text-[10px] text-muted-foreground font-medium italic truncate max-w-[100px] opacity-60">
+                      <span className="text-[9px] text-muted-foreground font-medium truncate max-w-[100px] opacity-50">
                         {zoneTriggers.map((z) => z.source).filter(Boolean).join(", ") || "Manual Input"}
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="font-bold text-primary tabular-nums group-hover:scale-110 transition-transform origin-left">₹{maxPayout}</TableCell>
-                  <TableCell className="text-[10px] text-muted-foreground font-medium text-right opacity-60">
+                  <TableCell className="font-bold text-primary tabular-nums font-mono group-hover:scale-105 transition-transform origin-left">₹{maxPayout}</TableCell>
+                  <TableCell className="text-[10px] text-muted-foreground font-medium text-right pr-5 opacity-50">
                     {new Date(row.lastUpdated).toLocaleTimeString()}
                   </TableCell>
                 </TableRow>

@@ -15,6 +15,11 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
+        bebas: ['var(--font-bebas)', 'Bebas Neue', 'sans-serif'],
+      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",
@@ -55,6 +60,12 @@ const config: Config = {
         "accent-yellow": "var(--accent-yellow)",
         "accent-purple": "var(--accent-purple)",
         surface: "var(--surface)",
+        "fs-green": "var(--fs-green)",
+        "fs-blue": "var(--fs-blue)",
+        "fs-yellow": "var(--fs-yellow)",
+        "fs-red": "var(--fs-red)",
+        "fs-purple": "var(--fs-purple)",
+        "fs-black": "var(--fs-black)",
         sidebar: {
           DEFAULT: "var(--sidebar)",
           foreground: "var(--sidebar-foreground)",
@@ -84,6 +95,7 @@ const config: Config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "spin-slow": "spin 12s linear infinite",
       },
     },
   },

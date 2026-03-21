@@ -32,105 +32,105 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-12">
-        <div className="space-y-6">
+    <div className="flex flex-col gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+        <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="h-0.5 w-12 bg-primary rounded-full shadow-[0_0_10px_var(--primary)]" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">GigShield Protocol v2.4</span>
+            <div className="h-[2px] w-10 bg-gradient-to-r from-primary to-transparent rounded-full" />
+            <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground opacity-60">GigShield Protocol v2.4</span>
           </div>
-          <h1 className="text-8xl font-bebas tracking-wide text-foreground leading-[0.85]">
-            Live <br /> <span className="text-primary italic">Monitoring</span>
+          <h1 className="text-6xl md:text-7xl font-display font-black tracking-tight text-foreground uppercase leading-[0.85]">
+            Live <br /> <span className="text-secondary italic">Monitoring</span>
           </h1>
-          <p className="max-w-xl text-lg font-medium text-muted-foreground leading-relaxed">
+          <p className="max-w-xl text-sm text-muted-foreground leading-relaxed font-medium">
             Real-time monitoring of weather and air quality triggers protecting India&apos;s gig economy across all metropolitan clusters.
           </p>
         </div>
-        <div className="flex flex-col items-end gap-6 w-full md:w-auto">
-          <div className="flex items-center gap-4 px-6 py-3 rounded-2xl bg-card border border-border/50 shadow-lg">
-            <div className={`size-3 rounded-full ${health ? 'bg-success animate-pulse shadow-[0_0_8px_var(--success)]' : 'bg-warning shadow-[0_0_8px_var(--warning)]'}`} />
-            <span className="text-sm font-black uppercase tracking-widest">{health ? 'System Operational' : 'Node Disconnect'}</span>
+        <div className="flex flex-col items-end gap-4 w-full md:w-auto">
+          <div className="flex items-center gap-3 px-4 py-2 rounded-xl glass">
+            <div className={`size-2.5 rounded-full ${health ? 'bg-success neon-success animate-pulse' : 'bg-warning'}`} />
+            <span className="text-[11px] font-bold uppercase tracking-wider">{health ? 'Operational' : 'Disconnected'}</span>
           </div>
-          <Button 
+          <Button
             onClick={init}
             size="lg"
-            className="rounded-2xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-black uppercase h-16 px-10 shadow-xl shadow-secondary/10 hover:scale-105 active:scale-95 transition-all w-full md:w-auto group"
+            className="rounded-xl bg-secondary text-white font-bold uppercase h-12 px-8 text-sm shadow-[0_0_20px_rgba(0,216,255,0.2)] hover:scale-105 active:scale-95 transition-all w-full md:w-auto group border-none"
           >
-            <RefreshCcw className={loading ? "animate-spin mr-3" : "mr-3 group-hover:rotate-180 transition-transform duration-500"} size={20} />
-            Synchronize Feed
+            <RefreshCcw className={loading ? "animate-spin mr-2" : "mr-2 group-hover:rotate-180 transition-transform duration-500"} size={18} />
+            Synchronize
           </Button>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        <StatsCard 
-          title="Active Alerts" 
-          value={triggers.filter(t => t.status === "ACTIVE").length} 
-          icon="zap" 
-          status={health ? "active" : "danger"} 
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StatsCard
+          title="Active Alerts"
+          value={triggers.filter(t => t.status === "ACTIVE").length}
+          icon="zap"
+          status={health ? "active" : "danger"}
           subtitle="Real-time trigger pipeline"
         />
-        <StatsCard 
-          title="Protected Hubs" 
-          value={zones.length} 
-          icon="map" 
+        <StatsCard
+          title="Protected Hubs"
+          value={zones.length}
+          icon="map"
           subtitle="Indian Metropolitan Coverage"
         />
-        <StatsCard 
-          title="Yield Index" 
-          value="1.24x" 
-          icon="trend" 
+        <StatsCard
+          title="Yield Index"
+          value="1.24x"
+          icon="trend"
           subtitle="Current Payout Velocity"
         />
       </div>
 
-      <section className="space-y-8">
+      <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h2 className="text-5xl font-bebas text-foreground tracking-wide">Activity Stream</h2>
-            <div className="h-0.5 w-24 bg-gradient-to-r from-primary to-transparent" />
+          <div className="flex items-center gap-3">
+            <h2 className="text-4xl font-display font-black text-foreground tracking-tight uppercase">Activity Stream</h2>
+            <div className="h-2 w-16 bg-primary rounded-full" />
           </div>
-          <button className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group">
+          <button className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-secondary transition-colors flex items-center gap-1.5 group">
             View Analytics
-            <ArrowUpRight className="size-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <ArrowUpRight className="size-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </button>
         </div>
-        
-        <div className="rounded-[3rem] border border-border bg-card/10 backdrop-blur-sm overflow-hidden shadow-2xl relative group">
-           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-30 group-hover:opacity-60 transition-opacity duration-1000" />
-           <TriggerTable triggers={triggers} loading={loading} />
+
+        <div className="rounded-2xl glass card-glow overflow-hidden relative group">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+          <TriggerTable triggers={triggers} loading={loading} />
         </div>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
-        <div className="p-10 rounded-[3rem] border border-border bg-card/30 backdrop-blur-md relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
-            <ShieldCheck className="size-24 text-primary" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-8 rounded-2xl glass card-glow relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+            <ShieldCheck className="size-20 text-primary" />
           </div>
-          <div className="relative z-10 space-y-6">
-            <h4 className="text-4xl font-bebas tracking-wide">Immutable Logging</h4>
-            <p className="text-sm font-medium text-muted-foreground leading-relaxed">
+          <div className="relative z-10 space-y-4">
+            <h4 className="text-3xl font-display font-black tracking-tight uppercase">Immutable Logging</h4>
+            <p className="text-sm text-muted-foreground leading-relaxed font-medium">
               Every environmental trigger is hashed and stored in our distributed ledger, ensuring total transparency between platforms and gig workers.
             </p>
-            <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-primary">
-               Verification Verified
-               <div className="size-1.5 bg-primary rounded-full" />
+            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-primary">
+              Verification Verified
+              <div className="size-2 bg-primary rounded-full" />
             </div>
           </div>
         </div>
-        
-        <div className="p-10 rounded-[3rem] border border-border bg-card/30 backdrop-blur-md relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
-            <ActivityIcon className="size-24 text-secondary" />
+
+        <div className="p-8 rounded-2xl glass card-glow relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+            <ActivityIcon className="size-20 text-secondary" />
           </div>
-          <div className="relative z-10 space-y-6">
-            <h4 className="text-4xl font-bebas tracking-wide">Health Metrics</h4>
-            <p className="text-sm font-medium text-muted-foreground leading-relaxed">
+          <div className="relative z-10 space-y-4">
+            <h4 className="text-3xl font-display font-black tracking-tight uppercase">Health Metrics</h4>
+            <p className="text-sm text-muted-foreground leading-relaxed font-medium">
               Global monitoring nodes are operating within normal latency thresholds. Data ingestion pipeline v4.0 is active across all regions.
             </p>
-            <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-secondary">
-               Latency: 24ms
-               <div className="size-1.5 bg-secondary rounded-full" />
+            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-secondary">
+              Latency: 24ms
+              <div className="size-2 bg-secondary rounded-full" />
             </div>
           </div>
         </div>

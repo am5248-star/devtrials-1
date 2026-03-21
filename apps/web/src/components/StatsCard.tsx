@@ -2,11 +2,11 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Clock, 
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
   TrendingUp,
   MapPin,
   Zap,
@@ -14,6 +14,7 @@ import {
   Layers,
   LucideIcon
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, LucideIcon> = {
   "activity": Activity,
@@ -38,31 +39,35 @@ interface StatsCardProps {
 export default function StatsCard({ title, value, subtitle, icon, status }: StatsCardProps) {
   const LucideIcon = iconMap[icon] || Activity;
 
+  // Map status to Fireship colors
+  const statusColor = status === 'active' ? 'bg-fs-green' : 
+                     status === 'warning' ? 'bg-fs-yellow' : 
+                     status === 'danger' ? 'bg-fs-red' : 'bg-fs-blue';
+
   return (
-    <Card className="rounded-xl border border-border bg-card/40 backdrop-blur-md shadow-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-6">
-        <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors">
-          {title}
-        </CardTitle>
-        <div className="flex items-center gap-2">
-           <LucideIcon className="size-4 text-primary opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all" />
-           {status && (
-             <div className={`h-1.5 w-1.5 rounded-full ${
-               status === 'active' ? 'bg-success shadow-[0_0_8px_var(--success)]' :
-               status === 'warning' ? 'bg-warning shadow-[0_0_8px_var(--warning)]' :
-               'bg-danger shadow-[0_0_8px_var(--danger)]'
-             }`} />
-           )}
+    <Card className="rounded-2xl glass-subtle card-glow transition-all duration-300 group overflow-hidden border-white/[0.05] hover:border-white/[0.1]">
+      <div className="flex p-4 items-center gap-5">
+        <div className={cn(
+          "size-14 rounded-xl flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500",
+          statusColor
+        )}>
+          <LucideIcon className="size-7 text-white drop-shadow-sm" strokeWidth={2.5} />
         </div>
-      </CardHeader>
-      <CardContent className="px-6 pb-6">
-        <div className="text-3xl font-bold text-foreground tabular-nums tracking-tight">{value}</div>
-        {subtitle && (
-          <p className="text-[10px] font-medium text-muted-foreground mt-1 opacity-60">
-            {subtitle}
-          </p>
-        )}
-      </CardContent>
+        
+        <div className="flex-1 min-w-0">
+          <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors">
+            {title}
+          </CardTitle>
+          <div className="text-3xl font-black text-foreground tabular-nums tracking-tighter mt-0.5">
+            {value}
+          </div>
+          {subtitle && (
+            <p className="text-[10px] font-bold text-muted-foreground mt-0.5 opacity-60 uppercase tracking-tight">
+              {subtitle}
+            </p>
+          )}
+        </div>
+      </div>
     </Card>
   );
 }
