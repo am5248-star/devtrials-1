@@ -2,6 +2,7 @@ import app from './app';
 import { config } from './config';
 import { connectRedis } from './lib/redis';
 import { db } from './lib/db';
+import { startTriggerScheduler } from './triggers';
 
 const startServer = async () => {
   try {
@@ -19,6 +20,9 @@ const startServer = async () => {
 🚀 Port: ${config.port}
 🌍 Environment: ${config.nodeEnv}
       `);
+
+      // 4. Start Trigger Monitoring Scheduler
+      startTriggerScheduler();
     });
   } catch (error) {
     console.error('Failed to start server:', error);

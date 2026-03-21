@@ -20,4 +20,32 @@ export const config = {
   mlService: {
     url: process.env.ML_API_URL || 'http://localhost:8000',
   },
+  apis: {
+    openWeather: {
+      key: process.env.OPENWEATHER_API_KEY || '',
+      baseUrl: 'https://api.openweathermap.org/data/2.5',
+    },
+    aqicn: {
+      key: process.env.AQICN_API_KEY || '',
+      baseUrl: 'https://api.waqi.info',
+    },
+  },
+  triggers: {
+    pollingIntervalMs: 5 * 60 * 1000, // 5 minutes
+    rainfall: {
+      thresholdMm: 50,
+      windowHrs: 3,
+      payoutAmount: 800,
+    },
+    aqi: {
+      threshold: 300,
+      sustainedHrs: 4,
+      payoutAmount: 600,
+    },
+    heatIndex: {
+      thresholdCelsius: 45,
+      sustainedHrs: 3,
+      payoutAmount: 500,
+    },
+  },
 };

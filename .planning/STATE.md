@@ -2,16 +2,17 @@
 
 ## Current Position
 
-**Phase:** 1 - Foundation & Infrastructure (Completed)
+**Phase:** 2 - Parametric Trigger Monitoring (Completed)
 **Plan:** —
-**Status:** Phase 1 Complete. Ready for Phase 2.
-**Last activity:** 2026-03-21 — Backend foundation, JWT auth, and Docker setup completed.
+**Status:** Phase 2 Complete. Ready for Phase 3.
+**Last activity:** 2026-03-21 — Rainfall, AQI, Heat Index monitors + cron scheduler implemented.
 
 ## Milestone v1.0: Core Parametric Engine
 
 **Goal:** Establish the technical foundation and the automated parametric trigger system.
 
 **Target Features:**
+
 - Backend Infrastructure (API, TimescaleDB, Redis, Cron)
 - Parametric Trigger Monitoring (Rainfall, AQI, Heat)
 - Core ML Inference (Dynamic Premium, Fraud Scoring)

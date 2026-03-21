@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { auth } from './middleware/auth';
+import triggerRoutes from './routes/triggers';
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Trigger Routes (public for hackathon demo, protect with auth in production)
+app.use('/api/triggers', triggerRoutes);
+
 // Protected Test Route
 app.get('/api/protected-test', auth, (req, res) => {
   res.json({
@@ -26,3 +30,4 @@ app.get('/api/protected-test', auth, (req, res) => {
 });
 
 export default app;
+

@@ -11,10 +11,10 @@ This document tracks the requirements specifically scoped for Milestone v1.0.
 
 ## Parametric Trigger Monitoring (TM)
 
-- [ ] **TM-001**: Implement Rainfall monitor pulling from OpenWeather API (>50mm/3hrs).
-- [ ] **TM-002**: Implement AQI monitor (>300 sustained 4hrs).
-- [ ] **TM-003**: Implement Heat Index monitor (>45°C sustained 3hrs).
-- [ ] **TM-004**: Node-cron worker for 5-minute polling and logging to TimescaleDB.
+- [x] **TM-001**: Implement Rainfall monitor pulling from OpenWeather API (>50mm/3hrs).
+- [x] **TM-002**: Implement AQI monitor (>300 sustained 4hrs).
+- [x] **TM-003**: Implement Heat Index monitor (>45°C sustained 3hrs).
+- [x] **TM-004**: Node-cron worker for 5-minute polling and logging to TimescaleDB.
 
 ## ML Core (ML)
 
@@ -30,10 +30,10 @@ This document tracks the requirements specifically scoped for Milestone v1.0.
 | BI-002 | 1 | Completed |
 | BI-003 | 1 | Completed |
 | BI-004 | 1 | Completed |
-| TM-001 | 2 | Pending |
-| TM-002 | 2 | Pending |
-| TM-003 | 2 | Pending |
-| TM-004 | 2 | Pending |
+| TM-001 | 2 | Completed |
+| TM-002 | 2 | Completed |
+| TM-003 | 2 | Completed |
+| TM-004 | 2 | Completed |
 | ML-001 | 3 | Pending |
 | ML-002 | 3 | Pending |
 | ML-003 | 3 | Pending |
