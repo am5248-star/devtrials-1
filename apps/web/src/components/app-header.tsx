@@ -2,22 +2,42 @@
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import {
+import { useIsMobile } from "@/hooks/use-mobile";
+import Link from "next/link";
+import { 
   Bell,
   Search,
   ChevronDown,
   Settings,
-  User,
   Database,
-  Globe
+  Globe,
+  ShieldCheck,
+  LogIn
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { 
+  UserButton, 
+  SignInButton, 
+  SignUpButton, 
+  SignedIn, 
+  SignedOut 
+} from "@clerk/nextjs";
 export function AppHeader() {
+  const isMobile = useIsMobile();
+  
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full shrink-0 items-center justify-between border-b border-white/[0.06] bg-[#0a0a12]/70 backdrop-blur-2xl px-6 md:px-10 transition-all">
+    <header className="sticky top-0 z-30 flex h-16 w-full shrink-0 items-center justify-between border-b border-white/[0.06] bg-[#0a0a12]/70 backdrop-blur-2xl px-4 md:px-10 transition-all">
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="hover:bg-primary/10 transition-colors rounded-lg" />
+        {isMobile ? (
+          <Link href="/" className="flex items-center gap-2 group mr-2">
+            <div className="flex aspect-square size-8 items-center justify-center shrink-0 rounded-lg bg-primary shadow-[0_0_10px_rgba(255,70,37,0.2)]">
+              <ShieldCheck className="size-5 text-white" strokeWidth={2.5} />
+            </div>
+            <span className="text-sm font-display font-black tracking-tight text-foreground uppercase">Gig<span className="text-primary italic">Shield</span></span>
+          </Link>
+        ) : (
+          <SidebarTrigger className="hover:bg-primary/10 transition-colors rounded-lg" />
+        )}
         <Separator orientation="vertical" className="h-4 bg-white/[0.06] hidden md:block" />
         <div className="hidden lg:flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg glass-subtle text-[10px] font-black uppercase tracking-[0.12em] border-none">
@@ -50,20 +70,37 @@ export function AppHeader() {
           </Button>
         </div>
 
-        <Separator orientation="vertical" className="h-5 bg-white/[0.06]" />
+        <Separator orientation="vertical" className="h-5 bg-white/[0.06] hidden sm:block" />
+        
+        <SignedIn>
+          <div className="flex items-center gap-3 pl-1 group cursor-pointer transition-all">
+            <UserButton 
+              appearance={{
+                elements: {
+                  userButtonTrigger: "hover:scale-105 transition-transform",
+                  userButtonAvatarBox: "size-9 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(0,183,255,0.1)]",
+                  userButtonPopoverCard: "rounded-3xl border border-white/5 bg-[#0a0a12]/95 backdrop-blur-xl shadow-2xl",
+                }
+              }}
+            />
+          </div>
+        </SignedIn>
 
-        <div className="flex items-center gap-3 pl-1 group cursor-pointer">
-          <div className="flex flex-col items-end gap-0.5">
-            <span className="text-xs font-display font-black text-foreground group-hover:text-secondary transition-colors uppercase">Arunavo Gupta</span>
-            <span className="text-[8px] font-display font-black uppercase tracking-widest text-muted-foreground opacity-50">Senior Auditor</span>
+        <SignedOut>
+          <div className="flex items-center gap-2">
+            <SignInButton mode="modal">
+              <Button variant="ghost" className="hidden sm:flex text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-white/5">
+                Sign In
+              </Button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <Button size="sm" className="rounded-xl bg-primary text-white font-black uppercase text-[10px] px-5 h-9 shadow-lg hover:neon-primary transition-all flex items-center gap-2">
+                <LogIn size={13} strokeWidth={3} />
+                Enter Console
+              </Button>
+            </SignUpButton>
           </div>
-          <div className="size-9 rounded-xl bg-secondary p-[1.5px] group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(0,183,255,0.2)]">
-            <div className="size-full rounded-[10px] bg-card flex items-center justify-center">
-              <User className="size-5 text-foreground" />
-            </div>
-          </div>
-          <ChevronDown className="size-3.5 text-muted-foreground group-hover:text-secondary transition-all group-hover:translate-y-0.5" />
-        </div>
+        </SignedOut>
       </div>
     </header>
   );

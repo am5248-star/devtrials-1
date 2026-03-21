@@ -1,4 +1,4 @@
-# GigShield — Technical Design Document
+![alt text](image.png)# GigShield — Technical Design Document
 
 > **Version**: 1.0  
 > **Last Updated**: March 2026  

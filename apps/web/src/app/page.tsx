@@ -61,24 +61,29 @@ export default function HomePage() {
       {/* Top Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 h-20 glass-strong flex items-center px-6 md:px-12 justify-between">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-xl bg-gradient-to-br from-primary to-[#ff8c00] flex items-center justify-center neon-primary">
-            <Zap className="size-5 text-white fill-current" />
+          <div className="size-10 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,70,37,0.3)] rotate-6">
+            <ShieldCheck className="size-6 text-white" strokeWidth={2.5} />
           </div>
-          <div className="flex flex-col">
-            <span className="text-2xl font-display font-black tracking-tight leading-none uppercase">GigShield</span>
-            <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-secondary opacity-80 mt-1">Parametric Oracle</span>
+          <div className="flex flex-col gap-0 leading-tight">
+            <span className="text-2xl font-display font-black tracking-tight text-foreground whitespace-nowrap uppercase">Gig<span className="text-primary italic">Shield</span></span>
+            <span className="text-[8px] font-bold tracking-[0.2em] text-muted-foreground uppercase opacity-60 whitespace-nowrap">Parametric Oracle</span>
           </div>
         </div>
 
         <div className="hidden lg:flex items-center gap-10">
-          {["Protocols", "Ecosystem", "Governance", "Network"].map((item) => (
+          {[
+            { label: "Protocols", href: "/dashboard" },
+            { label: "Ecosystem", href: "/zones" },
+            { label: "Governance", href: "#" },
+            { label: "Network", href: "/triggers" }
+          ].map((item) => (
             <Link
-              key={item}
-              href="#"
-              className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground transition-colors relative group"
+              key={item.label}
+              href={item.href}
+              className="text-[11px] font-black uppercase tracking-[0.16em] text-white/50 hover:text-white transition-all duration-300 relative group"
             >
-              {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-primary to-secondary transition-all group-hover:w-full" />
+              {item.label}
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-primary to-secondary transition-all duration-500 group-hover:w-full" />
             </Link>
           ))}
         </div>
@@ -93,79 +98,86 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col pt-28 pb-20 px-6 md:px-12 max-w-[1400px] mx-auto w-full gap-28 relative z-10">
-        <section className="relative grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
-          <div className="space-y-10 z-10 anime-hero-content">
-            <div className="inline-flex items-center gap-2.5 glass rounded-full px-5 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary opacity-0">
-              <Sparkles size={14} className="text-secondary animate-pulse" />
-              <span>Hyper-Local Protection Protocol</span>
-            </div>
-
-            <div className="space-y-4 opacity-0">
-              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[110px] font-display font-black tracking-tight leading-[0.85] text-foreground uppercase">
-                Shield the <br />
-                <span className="text-primary italic">Driven.</span>
-              </h1>
-              <div className="h-2 w-32 bg-primary rounded-full" />
-            </div>
-
-            <p className="max-w-lg text-base text-muted-foreground leading-relaxed border-l-2 border-primary/30 pl-6 py-2 opacity-0">
-              Autonomous safety nets for India&apos;s essential gig workforce.
-              Real-time environmental synchronization providing <span className="text-foreground font-bold">instant payouts</span> during climate emergencies.
-            </p>
-
-            <div className="flex flex-wrap gap-5 pt-4 opacity-0">
-              <Link href="/dashboard">
-                <Button size="lg" className="rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold uppercase h-14 px-10 text-sm shadow-[0_0_20px_rgba(255,70,37,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group border-none">
-                  Enter Console
-                  <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Button variant="ghost" size="lg" className="rounded-2xl font-bold uppercase h-14 px-8 text-sm hover:bg-secondary/10 hover:text-secondary transition-all flex items-center gap-3 group">
-                <div className="size-9 rounded-full glass flex items-center justify-center group-hover:neon-secondary transition-all">
-                  <PlayCircle className="size-5 text-secondary fill-current" />
-                </div>
-                The Protocol
-              </Button>
+      <main className="flex-1 flex flex-col pt-24 pb-12 px-6 md:px-12 max-w-[1400px] mx-auto w-full gap-16 md:gap-28 relative z-10">
+        <section className="relative flex flex-col items-start min-h-[65vh] md:min-h-[85vh] gap-8">
+          {/* 3D Hero Element - Precisely positioned to touch the 'E' in 'SHIELD' */}
+          <div className="absolute top-[22%] translate-y-[-50%] left-[45%] lg:left-[48%] z-0 pointer-events-none anime-hero-image opacity-0 overflow-visible scale-[0.6] lg:scale-[0.85] w-full max-w-[800px] flex items-center justify-start">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/15 to-secondary/15 rounded-full blur-[100px] opacity-20 animate-glow-pulse scale-75" />
+            <div className="h-[400px] w-[400px] lg:h-[700px] lg:w-[700px] relative">
+              <HeroShield />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-transparent to-transparent" />
             </div>
           </div>
 
-          <div className="relative group anime-hero-image opacity-0">
-            <div className="absolute -inset-8 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-[2.5rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
-            <div className="relative overflow-visible">
-              <div className="aspect-[4/5] relative">
-                <HeroShield />
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+          <div className="w-full lg:w-3/5 relative z-10 flex flex-col items-start text-left pt-12">
+            <div className="space-y-12 anime-hero-content w-full">
+              <div className="inline-flex items-center gap-2.5 glass rounded-full px-5 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary opacity-0 self-start">
+                <Sparkles size={14} className="text-secondary animate-pulse" />
+                <span>Hyper-Local Protection Protocol</span>
               </div>
 
-              {/* Floating tactical card */}
+              <div className="space-y-6 opacity-0 relative">
+                <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[110px] font-display font-black tracking-tighter leading-[0.8] text-white uppercase drop-shadow-2xl flex flex-col">
+                  <span className="relative">
+                    SHIELD THE
+                  </span>
+                  <span className="text-primary italic">DRIVEN.</span>
+                </h1>
+                <div className="h-2 w-48 bg-primary rounded-full shadow-[0_0_20px_rgba(255,70,37,0.6)]" />
+              </div>
 
-              {/* Floating tactical card */}
-              <div className="absolute bottom-8 left-8 right-8 p-6 rounded-2xl glass-strong flex items-center justify-between translate-y-3 group-hover:translate-y-0 transition-transform duration-700">
-                <div className="space-y-1">
-                  <p className="text-[9px] uppercase font-bold text-muted-foreground tracking-[0.2em]">Payout Velocity</p>
-                  <div className="flex items-center gap-3">
-                    <p className="text-3xl font-bold text-foreground tabular-nums font-mono tracking-tighter">0.14s</p>
-                    <div className="px-2 py-0.5 rounded-full bg-success/15 border border-success/20 text-[8px] font-bold text-success uppercase neon-success">Instant</div>
-                  </div>
+              <p className="max-w-xl text-base md:text-lg text-white/70 leading-relaxed border-l-2 border-primary/40 pl-8 py-3 opacity-0 backdrop-blur-sm bg-white/[0.02] rounded-r-2xl">
+                Autonomous safety nets for India&apos;s essential gig workforce.
+                Real-time environmental synchronization providing <span className="text-white font-bold text-shadow-glow">instant payouts</span> during climate emergencies.
+              </p>
+
+              <div className="flex flex-row items-center gap-3 md:gap-6 pt-6 opacity-0">
+                <Link href="/dashboard" className="flex-1 sm:flex-none">
+                  <Button size="lg" className="w-full sm:w-auto rounded-xl sm:rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold uppercase h-12 sm:h-16 px-4 sm:px-12 text-[10px] sm:text-sm shadow-[0_10px_30px_rgba(255,70,37,0.45)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-4 border-none">
+                    Enter Console
+                    <ArrowRight className="size-4 sm:size-5" />
+                  </Button>
+                </Link>
+                <Link href="#" className="flex-1 sm:flex-none">
+                  <Button variant="ghost" size="lg" className="w-full sm:w-auto rounded-xl sm:rounded-2xl font-bold uppercase h-12 sm:h-16 px-4 sm:px-10 text-[10px] sm:text-sm hover:bg-secondary/10 hover:text-secondary transition-all flex items-center justify-center gap-2 sm:gap-4 group border border-white/5 backdrop-blur-md">
+                    <div className="size-6 sm:size-10 rounded-full glass flex items-center justify-center group-hover:neon-secondary transition-all shadow-inner">
+                      <PlayCircle className="size-4 sm:size-6 text-secondary fill-current" />
+                    </div>
+                    The Protocol
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating tactical card - Re-anchored to avoid central clutter */}
+          <div className="absolute right-0 bottom-20 group lg:opacity-100 hidden lg:block z-20">
+            <div className="p-8 rounded-[2rem] glass-strong border border-white/10 flex items-center gap-10 shadow-2xl animate-float-slow backdrop-blur-3xl">
+              <div className="space-y-2">
+                <p className="text-[10px] uppercase font-black text-muted-foreground tracking-[0.25em]">Payout Velocity</p>
+                <div className="flex items-center gap-4">
+                  <p className="text-5xl font-bold text-white tabular-nums font-mono tracking-tighter shrink-0 leading-none">0.14s</p>
+                  <div className="px-3 py-1.5 rounded-full bg-success/15 border border-success/20 text-[10px] font-black text-success uppercase neon-success whitespace-nowrap">Instant</div>
                 </div>
-                <div className="size-12 rounded-xl bg-primary/15 flex items-center justify-center border border-primary/20">
-                  <ShieldCheck className="size-6 text-primary" />
-                </div>
+              </div>
+              <div className="size-16 rounded-[1.25rem] bg-primary/15 flex items-center justify-center border border-primary/20 shrink-0 shadow-[0_0_30px_rgba(255,70,37,0.2)]">
+                <ShieldCheck className="size-9 text-primary shadow-glow" />
               </div>
             </div>
           </div>
         </section>
 
         {/* Scrolling Banner */}
-        <section className="py-8 border-y border-white/5 flex flex-wrap gap-10 justify-between items-center overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5" />
-          {["AQI MONITORING", "PRECIPITATION ORACLE", "HEATWAVE PROTECTION", "SMART CONTRACT PAYOUTS"].map((item, i) => (
-            <div key={i} className="flex items-center gap-3 relative z-10 opacity-0 anime-banner-item hover:opacity-100 transition-opacity">
-              <div className="size-1.5 bg-secondary rounded-full neon-secondary" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.15em]">{item}</span>
-            </div>
-          ))}
+        <section className="py-8 border-y border-white/5 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-secondary/[0.03]" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 lg:gap-8 relative z-10 px-4 max-w-[1200px] mx-auto">
+            {["AQI MONITORING", "PRECIPITATION ORACLE", "HEATWAVE PROTECTION", "SMART CONTRACT PAYOUTS"].map((item, i) => (
+              <div key={i} className="flex items-center justify-center lg:justify-start gap-3 anime-banner-item opacity-0 group-hover:opacity-100 transition-all duration-500 py-1 px-2">
+                <div className="size-1.5 bg-secondary rounded-full neon-secondary animate-pulse shrink-0" />
+                <span className="text-[8px] md:text-[10px] lg:text-[11px] font-black uppercase tracking-[0.15em] lg:tracking-[0.25em] text-white/40 group-hover:text-white/80 transition-colors text-center whitespace-nowrap">{item}</span>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Feature Grid — Glassmorphism Cards */}
@@ -213,35 +225,37 @@ export default function HomePage() {
         </section>
 
         {/* World Statistics */}
-        <section className="p-14 rounded-3xl glass card-glow relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-14 group anime-stats-section opacity-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,70,37,0.08)_0%,transparent_40%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(0,216,255,0.05)_0%,transparent_40%)]" />
-          <div className="space-y-6 relative z-10 lg:max-w-xl">
-            <div className="flex items-center gap-3 text-secondary font-bold uppercase tracking-widest text-[11px]">
-              <Globe className="size-4 animate-spin-slow" />
-              Global Expansion Phase
+        <section className="p-8 md:p-14 rounded-2xl md:rounded-3xl glass card-glow relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-14 group anime-stats-section opacity-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,70,37,0.08)_0%,transparent_40%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(0,216,255,0.05)_0%,transparent_40%)] pointer-events-none" />
+          
+          <div className="w-full lg:max-w-xl flex flex-col items-start text-left space-y-8 relative z-10">
+            <div className="flex items-center gap-3 text-secondary font-black uppercase tracking-[0.2em] text-[10px] sm:text-[11px]">
+              <Globe className="size-4 animate-spin-slow text-secondary" />
+              African Operations Phase
             </div>
-            <h2 className="text-6xl md:text-7xl font-display font-black tracking-tight leading-[0.9] uppercase">
-              Covering the <br /> <span className="text-secondary italic">Global South</span>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-display font-black tracking-tight leading-[0.85] uppercase">
+              Covering the <br /> <span className="text-secondary italic">Pan-African</span>
             </h2>
-            <p className="text-base text-muted-foreground leading-relaxed font-medium">
-              By EOFY 2026, GigShield will provide parametric protection to over 4 million gig workers across the African and South-Asian continents.
+            <p className="text-sm sm:text-base text-white/60 leading-relaxed font-medium max-w-lg">
+              By EOFY 2026, GigShield will provide parametric protection to over 4 million gig workers across the African continent and reaching the Global South.
             </p>
-            <Button className="h-12 px-8 rounded-xl bg-secondary text-white font-bold uppercase hover:scale-105 transition-all flex items-center gap-2.5 shadow-[0_0_20px_rgba(0,216,255,0.2)] border-none">
-              Explore Territories <MapPin size={16} />
+            <Button className="h-14 px-10 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black uppercase shadow-[0_10px_30px_rgba(0,216,255,0.3)] border-none transition-all hover:scale-105 active:scale-95 w-full sm:w-auto flex items-center justify-center gap-3">
+              Explore Africa <MapPin size={18} />
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 w-full lg:w-auto">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full lg:w-auto relative z-10">
             {[
               { label: "Active Riders", val: "1.2M+" },
               { label: "Platform Nodes", val: "84" },
               { label: "Safety Payouts", val: "$4.1M" },
               { label: "Response Time", val: "2s" },
             ].map((stat, i) => (
-              <div key={i} className="p-6 rounded-2xl glass-subtle group-hover:border-secondary/30 transition-all duration-500">
-                <p className="text-5xl font-display font-black text-foreground tabular-nums tracking-tight">{stat.val}</p>
-                <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mt-2">{stat.label}</p>
+              <div key={i} className="p-5 md:p-8 rounded-2xl glass-subtle border border-white/5 hover:border-secondary/30 transition-all duration-500 flex flex-col justify-center items-center lg:items-start min-w-[140px] md:min-w-[180px]">
+                <p className="text-3xl md:text-5xl font-display font-black text-white tabular-nums tracking-tighter leading-none shrink-0">{stat.val}</p>
+                <div className="h-0.5 w-6 bg-secondary/30 my-3 lg:my-4 hidden lg:block" />
+                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mt-1">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -262,7 +276,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-14">
+            <div className="grid grid-cols-3 gap-6 md:gap-14 w-full md:w-auto">
               {[
                 { title: "Protocol", links: ["Documentation", "Audit", "GitHub", "Paper"] },
                 { title: "Company", links: ["Ecosystem", "Founders", "Regions", "Careers"] },

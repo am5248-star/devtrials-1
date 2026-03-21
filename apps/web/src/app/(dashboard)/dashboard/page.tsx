@@ -7,8 +7,10 @@ import { fetchTriggers, fetchZones, checkHealth, Trigger, Zone } from "@/lib/api
 import { RefreshCcw, Activity as ActivityIcon, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import anime from "animejs";
+import { useUser } from "@clerk/nextjs";
 
 export default function DashboardPage() {
+  const { user, isLoaded } = useUser();
   const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [zones, setZones] = useState<Zone[]>([]);
   const [health, setHealth] = useState<boolean>(false);
@@ -85,31 +87,37 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-[clamp(2rem,5vh,4rem)]">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-10 anime-header">
-        <div className="space-y-4 opacity-0">
-          <div className="flex items-center gap-3">
-            <div className="h-[2px] w-10 bg-gradient-to-r from-primary to-transparent rounded-full" />
-            <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground opacity-60">GigShield Protocol v2.4</span>
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-12 anime-header relative">
+        <div className="flex-1 space-y-4 md:space-y-6 opacity-0 min-w-0">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-[2px] w-8 bg-gradient-to-r from-primary to-transparent rounded-full" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">GigShield Protocol v2.4</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full glass-strong border border-white/[0.05]">
+              <div className={`size-1.5 rounded-full ${health ? 'bg-success neon-success animate-pulse' : 'bg-warning'}`} />
+              <span className="text-[9px] font-black uppercase tracking-[0.1em] text-foreground/80">{health ? 'Operational' : 'Offline'}</span>
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-black tracking-tight text-foreground uppercase leading-[0.85]">
-            Live <br /> <span className="text-secondary italic">Monitoring</span>
-          </h1>
-          <p className="max-w-xl text-sm text-muted-foreground leading-relaxed font-medium">
-            Real-time monitoring of weather and air quality triggers protecting India&apos;s gig economy across all metropolitan clusters.
-          </p>
+          
+          <div className="space-y-2">
+            <h1 className="text-[clamp(2.5rem,8vw,5.5rem)] font-display font-black tracking-tighter text-foreground uppercase leading-[0.8] shrink-0">
+              Live <br /> <span className="text-secondary italic">Monitoring</span>
+            </h1>
+            <p className="max-w-xl text-sm md:text-base text-muted-foreground leading-relaxed font-medium opacity-80 mt-4">
+              Real-time monitoring of weather and air quality triggers protecting India&apos;s gig economy across all metropolitan clusters.
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col items-end gap-4 w-full md:w-auto opacity-0">
-          <div className="flex items-center gap-3 px-4 py-2 rounded-xl glass">
-            <div className={`size-2 rounded-full ${health ? 'bg-success neon-success animate-pulse' : 'bg-warning'}`} />
-            <span className="text-[11px] font-bold uppercase tracking-wider">{health ? 'Operational' : 'Disconnected'}</span>
-          </div>
+
+        <div className="flex flex-col gap-4 pb-2 group opacity-0 w-full md:w-auto overflow-hidden">
           <Button
             onClick={init}
-            size="lg"
-            className="rounded-xl bg-secondary text-white font-bold uppercase h-12 px-8 text-sm shadow-[0_0_20px_rgba(0,216,255,0.2)] hover:scale-105 active:scale-95 transition-all w-full md:w-auto group border-none"
+            size="sm"
+            className="rounded-xl bg-secondary text-white font-bold uppercase h-11 px-8 text-[11px] tracking-[0.15em] shadow-[0_0_25px_rgba(0,216,255,0.25)] hover:scale-105 active:scale-95 transition-all group border-none w-fit"
           >
-            <RefreshCcw className={loading ? "animate-spin mr-2" : "mr-2 group-hover:rotate-180 transition-transform duration-500"} size={18} />
-            Synchronize
+            <RefreshCcw className={loading ? "animate-spin mr-2" : "mr-2 group-hover:rotate-180 transition-transform duration-500"} size={14} />
+            <span className="whitespace-nowrap">Synchronize</span>
           </Button>
         </div>
       </header>
