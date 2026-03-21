@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { checkHealth } from "@/lib/api";
 import anime from "animejs";
 
 const data = {
@@ -53,7 +54,23 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
+  const [isOnline, setIsOnline] = React.useState(true);
+
   React.useEffect(() => {
+    // Health polling
+    const checkLiveStatus = async () => {
+      try {
+        const status = await checkHealth();
+        setIsOnline(!!status);
+      } catch (e) {
+        setIsOnline(false);
+      }
+    };
+
+    checkLiveStatus();
+    const interval = setInterval(checkLiveStatus, 5000); // Check every 5s
+
+    // Animations
     const tl = anime.timeline({
       easing: 'easeOutExpo',
       duration: 800
@@ -73,6 +90,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       duration: 1000,
       easing: 'spring(1, 80, 10, 0)'
     }, '-=600');
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -128,14 +147,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 group-data-[collapsible=icon]:hidden">
-        <div className="p-3 rounded-xl glass relative overflow-hidden">
-          <div className="flex items-center gap-2.5 mb-1.5">
-            <div className="size-2 rounded-full bg-success neon-success animate-pulse" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-foreground">Live Monitoring</span>
+      <SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:items-center transition-all duration-300">
+        <div className="p-3 rounded-xl glass relative overflow-hidden transition-all duration-500 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:rounded-lg group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:justify-center">
+          <div className="flex items-center gap-2.5 mb-1.5 group-data-[collapsible=icon]:mb-0">
+            <div className={cn(
+              "size-2 rounded-full animate-pulse transition-colors duration-500 shrink-0",
+              isOnline ? "bg-success neon-success" : "bg-destructive shadow-[0_0_12px_rgba(255,45,85,1)]"
+            )} />
+            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-foreground group-data-[collapsible=icon]:hidden">
+              {isOnline ? "Live Monitoring" : "System Offline"}
+            </span>
           </div>
-          <p className="text-[8px] text-muted-foreground leading-tight opacity-60">
-            Oracle synchronized. Sensor fusion active.
+          <p className="text-[8px] text-muted-foreground leading-tight opacity-60 group-data-[collapsible=icon]:hidden">
+            {isOnline 
+              ? "Oracle synchronized. Sensor fusion active." 
+              : "Connection lost. Re-establishing link..."}
           </p>
         </div>
       </SidebarFooter>
