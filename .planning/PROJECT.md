@@ -1,5 +1,14 @@
 # GigShield
 
+## Current Milestone: v1.0 Core Parametric Engine
+
+**Goal:** Establish the technical foundation and the automated parametric trigger system.
+
+**Target features:**
+- Backend Infrastructure (API, TimescaleDB, Redis, Cron)
+- Parametric Trigger Monitoring (Rainfall, AQI, Heat)
+- Core ML Inference (Dynamic Premium, Fraud Scoring)
+
 ## What This Is
 
 **GigShield** is a parametric income insurance platform for India's 11+ million gig delivery workers (Zomato, Swiggy, Zepto). When verified external disruptions occur — heavy rainfall, floods, air quality crises, civil disruptions, or extreme heat — workers receive automatic payouts to their UPI accounts within 2-24 hours. No claims forms, no adjusters, no waiting for approval.
@@ -115,6 +124,23 @@ This is a **Guidewire DEVTrails 2026 Hackathon** project being built to **produc
 | Razorpay test mode | Production-quality integration without real money | — Pending |
 | TimescaleDB for triggers | Time-series queries for historical disruption patterns | — Pending |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
 
-*Last updated: 2026-03-21 after initialization*
+*Last updated: 2026-03-21 after starting Milestone v1.0*

@@ -4,10 +4,10 @@ This document tracks the requirements specifically scoped for Milestone v1.0.
 
 ## Backend Infrastructure (BI)
 
-- [ ] **BI-001**: RESTful API setup with Express and TypeScript.
-- [ ] **BI-002**: JWT-based authentication for core service communication.
-- [ ] **BI-003**: TimescaleDB setup for storing high-frequency trigger data.
-- [ ] **BI-004**: Redis integration for caching and rate limiting.
+- [x] **BI-001**: RESTful API setup with Express and TypeScript.
+- [x] **BI-002**: JWT-based authentication for core service communication.
+- [x] **BI-003**: TimescaleDB setup for storing high-frequency trigger data.
+- [x] **BI-004**: Redis integration for caching and rate limiting.
 
 ## Parametric Trigger Monitoring (TM)
 
@@ -26,10 +26,10 @@ This document tracks the requirements specifically scoped for Milestone v1.0.
 
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| BI-001 | 1 | Pending |
-| BI-002 | 1 | Pending |
-| BI-003 | 1 | Pending |
-| BI-004 | 1 | Pending |
+| BI-001 | 1 | Completed |
+| BI-002 | 1 | Completed |
+| BI-003 | 1 | Completed |
+| BI-004 | 1 | Completed |
 | TM-001 | 2 | Pending |
 | TM-002 | 2 | Pending |
 | TM-003 | 2 | Pending |
