@@ -100,12 +100,12 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          <div className="space-y-2">
-            <h1 className="text-[clamp(2.5rem,8vw,5.5rem)] font-display font-black tracking-tighter text-foreground uppercase leading-[0.8] shrink-0">
-              Live <br /> <span className="text-secondary italic">Monitoring</span>
+          <div className="space-y-4">
+            <h1 className="text-[clamp(2.3rem,8vw,5rem)] font-display font-black tracking-tighter text-foreground uppercase leading-[0.8] shrink-0">
+              Welcome, <br /> <span className="text-secondary italic">{isLoaded && user ? user.firstName : "Auditor"}</span>
             </h1>
             <p className="max-w-xl text-sm md:text-base text-muted-foreground leading-relaxed font-medium opacity-80 mt-4">
-              Real-time monitoring of weather and air quality triggers protecting India&apos;s gig economy across all metropolitan clusters.
+              Real-time monitoring of weather and air quality triggers for <span className="text-white font-bold">{isLoaded && user ? user.fullName : "Verified Auditor"}</span> across all metropolitan clusters.
             </p>
           </div>
         </div>

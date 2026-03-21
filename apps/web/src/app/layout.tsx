@@ -20,6 +20,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  return (
     <ClerkProvider
       appearance={{
         baseTheme: dark,
@@ -46,4 +47,5 @@ export default function RootLayout({
         </body>
       </html>
     </ClerkProvider>
+  );
 }

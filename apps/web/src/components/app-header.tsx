@@ -18,12 +18,12 @@ import { Button } from "@/components/ui/button";
 import { 
   UserButton, 
   SignInButton, 
-  SignUpButton, 
-  SignedIn, 
-  SignedOut 
+  SignUpButton,
+  useAuth
 } from "@clerk/nextjs";
 export function AppHeader() {
   const isMobile = useIsMobile();
+  const { userId } = useAuth();
   
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full shrink-0 items-center justify-between border-b border-white/[0.06] bg-[#0a0a12]/70 backdrop-blur-2xl px-4 md:px-10 transition-all">
@@ -72,7 +72,7 @@ export function AppHeader() {
 
         <Separator orientation="vertical" className="h-5 bg-white/[0.06] hidden sm:block" />
         
-        <SignedIn>
+        {userId ? (
           <div className="flex items-center gap-3 pl-1 group cursor-pointer transition-all">
             <UserButton 
               appearance={{
@@ -84,9 +84,7 @@ export function AppHeader() {
               }}
             />
           </div>
-        </SignedIn>
-
-        <SignedOut>
+        ) : (
           <div className="flex items-center gap-2">
             <SignInButton mode="modal">
               <Button variant="ghost" className="hidden sm:flex text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-white/5">
@@ -100,7 +98,7 @@ export function AppHeader() {
               </Button>
             </SignUpButton>
           </div>
-        </SignedOut>
+        )}
       </div>
     </header>
   );
