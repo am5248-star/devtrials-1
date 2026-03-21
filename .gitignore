@@ -21,7 +21,13 @@ build/
 out/
 .next/
 .nuxt/
+.vercel/
+.turbo/
 .cache/
+.pnpm-store/
+.eslintcache
+.stylelintcache
+
 
 # Coverage directory used by tools like istanbul
 coverage/
