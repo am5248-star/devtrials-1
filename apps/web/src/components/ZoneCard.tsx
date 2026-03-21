@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, ChevronDown, ChevronUp, Radio, Ruler, Navigation } from "lucide-react";
 import { cn } from "@/lib/utils";
+import anime from "animejs";
 
 interface ZoneCardProps {
   zone: Zone;
@@ -13,9 +14,46 @@ interface ZoneCardProps {
 
 export default function ZoneCard({ zone }: ZoneCardProps) {
   const [expanded, setExpanded] = React.useState(false);
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const iconRef = React.useRef<HTMLDivElement>(null);
+
+  const handleEnter = () => {
+    anime({
+      targets: cardRef.current,
+      scale: 1.02,
+      duration: 400,
+      easing: 'easeOutQuad'
+    });
+    anime({
+      targets: iconRef.current,
+      rotate: '12deg',
+      scale: 1.1,
+      duration: 600,
+      easing: 'spring(1, 80, 10, 0)'
+    });
+  };
+
+  const handleLeave = () => {
+    anime({
+      targets: cardRef.current,
+      scale: 1,
+      duration: 400,
+      easing: 'easeOutQuad'
+    });
+    anime({
+      targets: iconRef.current,
+      rotate: '0deg',
+      scale: 1,
+      duration: 600,
+      easing: 'spring(1, 80, 10, 0)'
+    });
+  };
 
   return (
     <Card
+      ref={cardRef}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
       className={cn(
         "rounded-2xl glass card-glow transition-all duration-300 cursor-pointer overflow-hidden group/card",
         expanded && "ring-1 ring-secondary/20 bg-[#12121a]/80"
@@ -24,7 +62,7 @@ export default function ZoneCard({ zone }: ZoneCardProps) {
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5">
         <div className="flex items-center gap-4">
-          <div className="flex aspect-square size-12 items-center justify-center rounded-2xl bg-fs-blue shadow-[0_0_15px_rgba(0,216,255,0.25)] group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-300">
+          <div ref={iconRef} className="flex aspect-square size-12 items-center justify-center rounded-2xl bg-fs-blue shadow-[0_0_15px_rgba(0,216,255,0.25)] transition-all duration-300">
             <MapPin className="size-6 text-white" strokeWidth={2.5} />
           </div>
           <div>

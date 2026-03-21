@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import anime from "animejs";
 
 const data = {
   navMain: [
@@ -52,11 +53,33 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
+  React.useEffect(() => {
+    const tl = anime.timeline({
+      easing: 'easeOutExpo',
+      duration: 800
+    });
+
+    tl.add({
+      targets: '.anime-sidebar-item',
+      translateX: [-20, 0],
+      opacity: [0, 1],
+      delay: anime.stagger(60),
+    })
+    .add({
+      targets: '.anime-logo',
+      scale: [0.8, 1],
+      opacity: [0, 1],
+      rotate: '5deg',
+      duration: 1000,
+      easing: 'spring(1, 80, 10, 0)'
+    }, '-=600');
+  }, []);
+
   return (
-    <Sidebar collapsible="icon" className="border-r border-white/[0.06] bg-[#0d0d15]/80 backdrop-blur-2xl transition-all duration-300" {...props}>
+    <Sidebar collapsible="offcanvas" className="border-r border-white/[0.06] bg-[#0d0d15]/80 backdrop-blur-2xl transition-all duration-300" {...props}>
       <SidebarHeader className="p-4 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:items-center transition-all duration-300">
         <Link href="/" className="flex items-center gap-3 group group-data-[collapsible=icon]:justify-center">
-          <div className="flex aspect-square size-10 items-center justify-center shrink-0 rounded-xl bg-primary shadow-[0_0_15px_rgba(255,70,37,0.3)] group-hover:rotate-6 transition-all duration-300">
+          <div className="flex aspect-square size-10 items-center justify-center shrink-0 rounded-xl bg-primary shadow-[0_0_15px_rgba(255,70,37,0.3)] group-hover:rotate-6 transition-all duration-300 anime-logo opacity-0">
             <ShieldCheck className="size-6 text-white" strokeWidth={2.5} />
           </div>
           <div className="flex flex-col gap-0 leading-tight group-data-[collapsible=icon]:hidden animate-in fade-in slide-in-from-left-2 duration-300">
@@ -72,7 +95,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {data.navMain.map((item) => {
               const isActive = pathname === item.url;
               return (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className="anime-sidebar-item opacity-0">
                   <SidebarMenuButton
                     render={<Link href={item.url} />}
                     isActive={isActive}

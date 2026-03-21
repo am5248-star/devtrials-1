@@ -21,6 +21,23 @@ services:
     volumes:
       - redisdata:/data
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gigshield-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@db:5432/gigshield
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./backend/src:/app/src
+
 volumes:
   pgdata:
   redisdata:

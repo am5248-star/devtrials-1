@@ -5,8 +5,51 @@ import React from "react";
 import { ArrowRight, Zap, ShieldCheck, MapPin, Wind, CloudRain, ThermometerSun, PlayCircle, Globe, ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import anime from "animejs";
+import dynamic from "next/dynamic";
+
+// Dynamically import 3D component to ensure it only renders on client
+const HeroShield = dynamic(() => import("@/components/HeroShield"), { ssr: false });
 
 export default function HomePage() {
+  React.useEffect(() => {
+    const tl = anime.timeline({
+      easing: 'easeOutExpo',
+      duration: 1000
+    });
+
+    tl.add({
+      targets: '.anime-hero-content > *',
+      translateY: [50, 0],
+      opacity: [0, 1],
+      delay: anime.stagger(150),
+    })
+    .add({
+      targets: '.anime-hero-image',
+      scale: [0.9, 1],
+      opacity: [0, 1],
+      duration: 1500,
+    }, '-=800')
+    .add({
+      targets: '.anime-banner-item',
+      translateX: [-20, 0],
+      opacity: [0, 0.6],
+      delay: anime.stagger(100),
+    }, '-=1000')
+    .add({
+      targets: '.anime-feature-card',
+      translateY: [40, 0],
+      opacity: [0, 1],
+      delay: anime.stagger(100),
+      easing: 'spring(1, 80, 10, 0)',
+    }, '-=800')
+    .add({
+      targets: '.anime-stats-section',
+      translateY: [30, 0],
+      opacity: [0, 1],
+    }, '-=500');
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Ambient background glow */}
@@ -52,26 +95,26 @@ export default function HomePage() {
       {/* Hero Section */}
       <main className="flex-1 flex flex-col pt-28 pb-20 px-6 md:px-12 max-w-[1400px] mx-auto w-full gap-28 relative z-10">
         <section className="relative grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
-          <div className="space-y-10 z-10 animate-in fade-in slide-in-from-left-8 duration-1000">
-            <div className="inline-flex items-center gap-2.5 glass rounded-full px-5 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary">
+          <div className="space-y-10 z-10 anime-hero-content">
+            <div className="inline-flex items-center gap-2.5 glass rounded-full px-5 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary opacity-0">
               <Sparkles size={14} className="text-secondary animate-pulse" />
               <span>Hyper-Local Protection Protocol</span>
             </div>
 
-            <div className="space-y-4">
-              <h1 className="text-6xl md:text-7xl lg:text-[110px] font-display font-black tracking-tight leading-[0.85] text-foreground uppercase">
+            <div className="space-y-4 opacity-0">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[110px] font-display font-black tracking-tight leading-[0.85] text-foreground uppercase">
                 Shield the <br />
                 <span className="text-primary italic">Driven.</span>
               </h1>
               <div className="h-2 w-32 bg-primary rounded-full" />
             </div>
 
-            <p className="max-w-lg text-base text-muted-foreground leading-relaxed border-l-2 border-primary/30 pl-6 py-2">
+            <p className="max-w-lg text-base text-muted-foreground leading-relaxed border-l-2 border-primary/30 pl-6 py-2 opacity-0">
               Autonomous safety nets for India&apos;s essential gig workforce.
               Real-time environmental synchronization providing <span className="text-foreground font-bold">instant payouts</span> during climate emergencies.
             </p>
 
-            <div className="flex flex-wrap gap-5 pt-4">
+            <div className="flex flex-wrap gap-5 pt-4 opacity-0">
               <Link href="/dashboard">
                 <Button size="lg" className="rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold uppercase h-14 px-10 text-sm shadow-[0_0_20px_rgba(255,70,37,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group border-none">
                   Enter Console
@@ -87,17 +130,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative group animate-in fade-in slide-in-from-right-8 duration-1000">
+          <div className="relative group anime-hero-image opacity-0">
             <div className="absolute -inset-8 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-[2.5rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
-            <div className="relative p-1.5 rounded-[2.5rem] bg-gradient-to-br from-white/10 to-transparent border border-white/10 overflow-hidden card-glow">
-              <div className="aspect-[4/5] overflow-hidden rounded-[2.25rem]">
-                <img
-                  src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=2070"
-                  alt="Gig Economy Worker"
-                  className="w-full h-full object-cover grayscale-[0.3] contrast-[1.15] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
-                />
+            <div className="relative overflow-visible">
+              <div className="aspect-[4/5] relative">
+                <HeroShield />
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+
+              {/* Floating tactical card */}
 
               {/* Floating tactical card */}
               <div className="absolute bottom-8 left-8 right-8 p-6 rounded-2xl glass-strong flex items-center justify-between translate-y-3 group-hover:translate-y-0 transition-transform duration-700">
@@ -120,7 +161,7 @@ export default function HomePage() {
         <section className="py-8 border-y border-white/5 flex flex-wrap gap-10 justify-between items-center overflow-hidden relative">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5" />
           {["AQI MONITORING", "PRECIPITATION ORACLE", "HEATWAVE PROTECTION", "SMART CONTRACT PAYOUTS"].map((item, i) => (
-            <div key={i} className="flex items-center gap-3 relative z-10 opacity-60 hover:opacity-100 transition-opacity">
+            <div key={i} className="flex items-center gap-3 relative z-10 opacity-0 anime-banner-item hover:opacity-100 transition-opacity">
               <div className="size-1.5 bg-secondary rounded-full neon-secondary" />
               <span className="text-[10px] font-bold uppercase tracking-[0.15em]">{item}</span>
             </div>
@@ -152,7 +193,7 @@ export default function HomePage() {
               iconColor: "text-white",
             }
           ].map((feature, i) => (
-            <div key={feature.title} className="group p-8 rounded-3xl glass-subtle card-glow flex flex-col gap-6 hover:translate-y-[-4px] transition-all duration-300">
+            <div key={feature.title} className="group p-8 rounded-3xl glass-subtle card-glow flex flex-col gap-6 hover:translate-y-[-4px] transition-all duration-300 anime-feature-card opacity-0">
               <div className={cn("size-16 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110", feature.color)}>
                 <feature.icon className={cn("size-8", feature.iconColor)} strokeWidth={2.5} />
               </div>
@@ -172,7 +213,7 @@ export default function HomePage() {
         </section>
 
         {/* World Statistics */}
-        <section className="p-14 rounded-3xl glass card-glow relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-14 group">
+        <section className="p-14 rounded-3xl glass card-glow relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-14 group anime-stats-section opacity-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,70,37,0.08)_0%,transparent_40%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(0,216,255,0.05)_0%,transparent_40%)]" />
           <div className="space-y-6 relative z-10 lg:max-w-xl">

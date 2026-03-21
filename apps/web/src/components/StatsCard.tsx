@@ -15,6 +15,7 @@ import {
   LucideIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import anime from "animejs";
 
 const iconMap: Record<string, LucideIcon> = {
   "activity": Activity,
@@ -37,6 +38,8 @@ interface StatsCardProps {
 }
 
 export default function StatsCard({ title, value, subtitle, icon, status }: StatsCardProps) {
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const iconRef = React.useRef<HTMLDivElement>(null);
   const LucideIcon = iconMap[icon] || Activity;
 
   // Map status to Fireship colors
@@ -44,13 +47,53 @@ export default function StatsCard({ title, value, subtitle, icon, status }: Stat
                      status === 'warning' ? 'bg-fs-yellow' : 
                      status === 'danger' ? 'bg-fs-red' : 'bg-fs-blue';
 
+  const onMouseEnter = () => {
+    anime({
+      targets: cardRef.current,
+      scale: 1.02,
+      duration: 400,
+      easing: 'easeOutElastic(1, .6)'
+    });
+    anime({
+      targets: iconRef.current,
+      rotate: '15deg',
+      scale: 1.2,
+      duration: 600,
+      easing: 'spring(1, 80, 10, 0)'
+    });
+  };
+
+  const onMouseLeave = () => {
+    anime({
+      targets: cardRef.current,
+      scale: 1,
+      duration: 400,
+      easing: 'easeOutExpo'
+    });
+    anime({
+      targets: iconRef.current,
+      rotate: '0deg',
+      scale: 1,
+      duration: 600,
+      easing: 'spring(1, 80, 10, 0)'
+    });
+  };
+
   return (
-    <Card className="rounded-2xl glass-subtle card-glow transition-all duration-300 group overflow-hidden border-white/[0.05] hover:border-white/[0.1]">
+    <Card 
+      ref={cardRef}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className="rounded-2xl glass-subtle card-glow transition-all duration-300 group overflow-hidden border-white/[0.05] hover:border-white/[0.1] cursor-pointer"
+    >
       <div className="flex p-4 items-center gap-5">
-        <div className={cn(
-          "size-14 rounded-xl flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500",
-          statusColor
-        )}>
+        <div 
+          ref={iconRef}
+          className={cn(
+            "size-14 rounded-xl flex items-center justify-center shrink-0 shadow-lg transition-transform duration-500",
+            statusColor
+          )}
+        >
           <LucideIcon className="size-7 text-white drop-shadow-sm" strokeWidth={2.5} />
         </div>
         

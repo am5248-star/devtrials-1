@@ -24,6 +24,7 @@ import {
   Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import anime from "animejs";
 
 export default function TriggersPage() {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
@@ -46,6 +47,28 @@ export default function TriggersPage() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      const tl = anime.timeline({
+        easing: 'easeOutExpo',
+        duration: 1000
+      });
+
+      tl.add({
+        targets: '.anime-header-item',
+        translateY: [30, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(100),
+      })
+      .add({
+        targets: '.anime-trigger-row',
+        translateX: [-20, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(50),
+      }, '-=600');
+    }
+  }, [loading]);
+
   async function handleManualPoll() {
     try {
       setPolling(true);
@@ -59,29 +82,31 @@ export default function TriggersPage() {
   }
 
   return (
-    <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <div className="flex flex-col gap-10">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-10">
         <div className="space-y-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 opacity-0 anime-header-item">
             <div className="h-[2px] w-10 bg-gradient-to-r from-primary to-transparent rounded-full" />
             <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground opacity-60">Audit logs & event streaming</span>
           </div>
-          <h1 className="text-6xl font-display font-black tracking-tight text-foreground uppercase leading-[0.85]">
+          <h1 className="text-4xl sm:text-6xl font-display font-black tracking-tight text-foreground uppercase leading-[0.85] opacity-0 anime-header-item">
             Event <br /> <span className="text-secondary italic">Stream</span>
           </h1>
-          <p className="max-w-xl text-sm text-muted-foreground leading-relaxed font-medium">
+          <p className="max-w-xl text-sm text-muted-foreground leading-relaxed font-medium opacity-0 anime-header-item">
             Detailed immutable log of all environmental events and their corresponding payout adjustments monitored by GigShield.
           </p>
         </div>
-        <Button
-          onClick={handleManualPoll}
-          disabled={polling}
-          size="lg"
-          className="rounded-xl bg-secondary text-white font-bold uppercase h-12 px-8 text-sm shadow-[0_0_20px_rgba(0,183,255,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border-none"
-        >
-          {polling ? <RefreshCcw className="animate-spin" size={18} /> : <Zap className="fill-current" size={18} />}
-          {polling ? "Requesting..." : "Execute Manual Poll"}
-        </Button>
+        <div className="opacity-0 anime-header-item">
+          <Button
+            onClick={handleManualPoll}
+            disabled={polling}
+            size="lg"
+            className="rounded-xl bg-secondary text-white font-bold uppercase h-12 px-8 text-sm shadow-[0_0_20px_rgba(0,183,255,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border-none"
+          >
+            {polling ? <RefreshCcw className="animate-spin" size={18} /> : <Zap className="fill-current" size={18} />}
+            {polling ? "Requesting..." : "Execute Manual Poll"}
+          </Button>
+        </div>
       </header>
 
       <div className="rounded-2xl glass card-glow overflow-hidden relative group">
@@ -119,7 +144,7 @@ export default function TriggersPage() {
               </TableRow>
             ) : (
               triggers.map((t) => (
-                <TableRow key={t.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors group/row">
+                <TableRow key={t.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors group/row anime-trigger-row opacity-0">
                   <TableCell className="px-6 py-5">
                     <div className="flex items-center gap-3">
                       <div className="flex aspect-square size-10 items-center justify-center rounded-xl glass group-hover/row:border-primary/20 transition-all duration-300">
