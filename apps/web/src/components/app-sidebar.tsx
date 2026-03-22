@@ -6,7 +6,8 @@ import {
   Home,
   ShieldCheck,
   Activity,
-  Sparkles
+  Sparkles,
+  Map as MapIcon
 } from "lucide-react";
 
 import {
@@ -23,7 +24,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { checkHealth } from "@/lib/api";
+import { fetchHealth } from "@/lib/api";
 import anime from "animejs";
 
 const data = {
@@ -48,6 +49,11 @@ const data = {
       url: "/zones",
       icon: LayoutDashboard,
     },
+    {
+      title: "Live Risk Map",
+      url: "/dashboard/risk-map",
+      icon: MapIcon,
+    },
   ],
 };
 
@@ -60,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     // Health polling
     const checkLiveStatus = async () => {
       try {
-        const status = await checkHealth();
+        const status = await fetchHealth();
         setIsOnline(!!status);
       } catch (e) {
         setIsOnline(false);

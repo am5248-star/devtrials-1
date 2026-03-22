@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import StatsCard from "@/components/StatsCard";
 import TriggerTable from "@/components/TriggerTable";
-import { fetchTriggers, fetchZones, checkHealth, Trigger, Zone } from "@/lib/api";
+import { fetchTriggers, fetchZones, fetchHealth, Trigger, Zone } from "@/lib/api";
 import { RefreshCcw, Activity as ActivityIcon, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import anime from "animejs";
@@ -27,7 +27,7 @@ export default function DashboardPage() {
         console.warn("Manual poll failed, using existing cache", pollErr);
       }
 
-      const [t, z, h] = await Promise.all([fetchTriggers(), fetchZones(), checkHealth()]);
+      const [t, z, h] = await Promise.all([fetchTriggers(), fetchZones(), fetchHealth()]);
       setTriggers(t);
       setZones(z);
       setHealth(h);

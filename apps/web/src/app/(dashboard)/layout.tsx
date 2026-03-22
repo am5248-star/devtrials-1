@@ -7,7 +7,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Home, Activity } from "lucide-react";
+import { LayoutDashboard, Home, Activity, Map as MapIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardLayout({
@@ -32,6 +32,7 @@ function BottomNav() {
   const navItems = [
     { title: "Home", url: "/", icon: Home },
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+    { title: "Risk Map", url: "/dashboard/risk-map", icon: MapIcon },
     { title: "Triggers", url: "/triggers", icon: Activity },
     { title: "Zones", url: "/zones", icon: LayoutDashboard },
   ];

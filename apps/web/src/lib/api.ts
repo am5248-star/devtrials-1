@@ -39,9 +39,10 @@ const MOCK_ZONES: Zone[] = [
 ];
 
 const MOCK_TRIGGERS: Trigger[] = [
-  { id: "t1", type: "Rainfall", zone: "Mumbai Central", magnitude: 110.5, timestamp: new Date().toISOString(), payoutAmount: 1200, status: "PROCESSED" },
-  { id: "t2", type: "AQI", zone: "South Chennai", magnitude: 305.2, timestamp: new Date().toISOString(), payoutAmount: 800, status: "PENDING" },
-  { id: "t3", type: "HeatIndex", zone: "Bengaluru East", magnitude: 44.8, timestamp: new Date().toISOString(), payoutAmount: 500, status: "PROCESSED" },
+  { id: "t1", type: "Rainfall", zone: "East Coast Road", magnitude: 110.5, timestamp: new Date().toISOString(), payoutAmount: 1200, status: "PENDING" },
+  { id: "t2", type: "AQI", zone: "Mount Road", magnitude: 92.2, timestamp: new Date().toISOString(), payoutAmount: 800, status: "PENDING" },
+  { id: "t3", type: "HeatIndex", zone: "OMR Corridor", magnitude: 86.8, timestamp: new Date().toISOString(), payoutAmount: 500, status: "PROCESSED" },
+  { id: "t4", type: "Rainfall", zone: "Velachery Hub", magnitude: 74.0, timestamp: new Date().toISOString(), payoutAmount: 600, status: "PROCESSED" },
 ];
 
 export async function fetchTriggers(): Promise<Trigger[]> {
@@ -132,11 +133,47 @@ export async function manualPoll() {
   }
 }
 
-export async function checkHealth() {
+export async function fetchHealth() {
   try {
     const res = await fetch(`${BASE_URL}/health`);
     return res.ok;
   } catch (err) {
     return false;
+  }
+}
+
+export async function fetchHeatmap(includeMock = true): Promise<{ lat: number; lng: number; weight: number }[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/heatmap?includeMock=${includeMock}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error();
+    return await res.json();
+  } catch (err) {
+    console.warn("Backend heatmap unaccessible, returning empty data");
+    return [];
+  }
+}
+
+export async function fetchPriorityAlerts(): Promise<{ zone: string; riskIndex: number; type: string; status: string }[]> {
+  try {
+    const triggers = await fetchTriggers();
+    if (triggers.length === 0) throw new Error("No triggers");
+    
+    return triggers
+      .sort((a, b) => b.magnitude - a.magnitude)
+      .slice(0, 5)
+      .map(t => ({
+        zone: t.zone,
+        riskIndex: Math.min(Math.round(t.magnitude), 100),
+        type: t.type,
+        status: t.status === 'PROCESSED' ? 'MONITORED' : 'ACTIVE'
+      }));
+  } catch (err) {
+    // Return varied mock data for better UI testing
+    return [
+      { zone: 'East Coast Road', riskIndex: 100, type: 'Tsunami Watch', status: 'CRITICAL' },
+      { zone: 'Mount Road', riskIndex: 92, type: 'Protest Alert', status: 'ACTIVE' },
+      { zone: 'OMR Corridor', riskIndex: 88, type: 'Flash Flood', status: 'MONITORED' },
+      { zone: 'Velachery Hub', riskIndex: 74, type: 'AQI Spike', status: 'OBSERVING' },
+    ];
   }
 }
