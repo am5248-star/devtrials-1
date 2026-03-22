@@ -5,7 +5,7 @@
  * Payout: ₹500
  */
 import { config } from '../config';
-import { TriggerEvent, ZoneConfig, MONITORED_ZONES } from './types';
+import { TriggerEvent, ZoneConfig } from './types';
 import { isAlreadyProcessed, markAsProcessed, logTriggerEvent } from './triggerRepository';
 import { AccuWeatherService } from '../lib/accuWeatherService';
 
@@ -59,9 +59,9 @@ function generateMockHeatData(zone: ZoneConfig): { feelsLike: number; temp: numb
 }
 
 /**
- * Evaluate all monitored zones for Heat Index threshold breaches using live OpenWeatherMap data.
+ * Evaluate specified zones for Heat Index threshold breaches using live OpenWeatherMap data.
  */
-export async function checkHeatIndex(): Promise<TriggerEvent[]> {
+export async function checkHeatIndex(zones: ZoneConfig[]): Promise<TriggerEvent[]> {
   const triggeredEvents: TriggerEvent[] = [];
   const threshold = config.triggers.heatIndex.thresholdCelsius;
   const apiKey = config.apis.openWeather.key;
@@ -71,9 +71,9 @@ export async function checkHeatIndex(): Promise<TriggerEvent[]> {
     return [];
   }
 
-  console.log(`[Heat Index Monitor] Checking ${MONITORED_ZONES.length} zones via live API (threshold: >${threshold}°C feels-like)`);
+  console.log(`[Heat Index Monitor] Checking ${zones.length} zones via live API (threshold: >${threshold}°C feels-like)`);
 
-  for (const zone of MONITORED_ZONES) {
+  for (const zone of zones) {
     const data = await fetchHeatData(zone);
     if (!data) continue;
 

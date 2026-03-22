@@ -5,7 +5,7 @@
  * Payout: ₹600
  */
 import { config } from '../config';
-import { TriggerEvent, ZoneConfig, MONITORED_ZONES } from './types';
+import { TriggerEvent, ZoneConfig } from './types';
 import { isAlreadyProcessed, markAsProcessed, logTriggerEvent } from './triggerRepository';
 
 interface AqiApiResponse {
@@ -54,9 +54,9 @@ function generateMockAqiData(zone: ZoneConfig): number {
 }
 
 /**
- * Evaluate all monitored zones for AQI threshold breaches using live AQICN/WAQI API.
+ * Evaluate specified zones for AQI threshold breaches using live AQICN/WAQI API.
  */
-export async function checkAqi(): Promise<TriggerEvent[]> {
+export async function checkAqi(zones: ZoneConfig[]): Promise<TriggerEvent[]> {
   const triggeredEvents: TriggerEvent[] = [];
   const threshold = config.triggers.aqi.threshold;
   const apiKey = config.apis.aqicn.key;
@@ -66,9 +66,9 @@ export async function checkAqi(): Promise<TriggerEvent[]> {
     return [];
   }
 
-  console.log(`[AQI Monitor] Checking ${MONITORED_ZONES.length} zones via live API (threshold: AQI > ${threshold})`);
+  console.log(`[AQI Monitor] Checking ${zones.length} zones via live API (threshold: AQI > ${threshold})`);
 
-  for (const zone of MONITORED_ZONES) {
+  for (const zone of zones) {
     const aqi = await fetchAqiData(zone);
     if (aqi === null) continue;
 

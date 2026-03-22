@@ -13,20 +13,20 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Global Rate Limiter: 100 requests / 15 min
+// Global Rate Limiter: 500 requests / 15 min (increased for dev)
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 500,
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: 'Too many requests, please try again later.' }
 });
 app.use(globalLimiter);
 
-// Stricter limiter for triggers: 30 requests / 15 min
+// Stricter limiter for triggers: 100 requests / 15 min
 const triggerLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: 100,
   message: { message: 'High traffic on triggers, rate limited.' }
 });
 

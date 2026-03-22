@@ -166,3 +166,12 @@ export async function fetchPriorityAlerts(): Promise<{ zone: string; riskIndex: 
     ];
   }
 }
+export async function registerZone(zone: { name: string; city: string; lat: number; lon: number; accuWeatherKey?: string }) {
+  const res = await fetch(`${BASE_URL}/api/triggers/zones`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(zone),
+  });
+  if (!res.ok) throw new Error("Failed to register zone");
+  return await res.json();
+}

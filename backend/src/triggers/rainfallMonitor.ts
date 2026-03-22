@@ -5,7 +5,7 @@
  * Payout: ₹800
  */
 import { config } from '../config';
-import { TriggerEvent, ZoneConfig, MONITORED_ZONES } from './types';
+import { TriggerEvent, ZoneConfig } from './types';
 import { isAlreadyProcessed, markAsProcessed, logTriggerEvent } from './triggerRepository';
 import { AccuWeatherService } from '../lib/accuWeatherService';
 
@@ -43,9 +43,9 @@ async function fetchWeatherData(zone: ZoneConfig): Promise<WeatherApiResponse | 
 }
 
 /**
- * Evaluate all monitored zones for rainfall threshold breaches using live OpenWeatherMap data.
+ * Evaluate specified zones for rainfall threshold breaches using live OpenWeatherMap data.
  */
-export async function checkRainfall(): Promise<TriggerEvent[]> {
+export async function checkRainfall(zones: ZoneConfig[]): Promise<TriggerEvent[]> {
   const triggeredEvents: TriggerEvent[] = [];
   const threshold = config.triggers.rainfall.thresholdMm;
   const apiKey = config.apis.openWeather.key;
@@ -55,9 +55,9 @@ export async function checkRainfall(): Promise<TriggerEvent[]> {
     return [];
   }
 
-  console.log(`[Rainfall Monitor] Checking ${MONITORED_ZONES.length} zones via live API (threshold: ${threshold}mm/3hrs)`);
+  console.log(`[Rainfall Monitor] Checking ${zones.length} zones via live API (threshold: ${threshold}mm/3hrs)`);
 
-  for (const zone of MONITORED_ZONES) {
+  for (const zone of zones) {
     const data = await fetchWeatherData(zone);
     if (!data) continue;
 

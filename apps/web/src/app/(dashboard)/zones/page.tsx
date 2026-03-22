@@ -6,23 +6,26 @@ import { fetchZones, Zone } from "@/lib/api";
 import { Map, Loader2, Search, ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import anime from "animejs";
+import RegisterZoneModal from "@/components/RegisterZoneModal";
 
 export default function ZonesPage() {
   const [zones, setZones] = useState<Zone[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await fetchZones();
-        setZones(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+  async function load() {
+    try {
+      setLoading(true);
+      const data = await fetchZones();
+      setZones(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     load();
   }, []);
 
@@ -124,10 +127,7 @@ export default function ZonesPage() {
               GigShield is actively onboarding 14 additional metropolitan clusters for the 2025 monsoon season.
             </p>
           </div>
-          <button className="h-12 px-8 rounded-xl bg-primary text-white font-bold uppercase flex items-center gap-2.5 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,70,37,0.3)] group/btn text-sm border-none">
-            Register New Zone
-            <ArrowUpRight className="size-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-          </button>
+          <RegisterZoneModal onSuccess={load} />
         </div>
       </footer>
     </div>

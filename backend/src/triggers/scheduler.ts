@@ -7,6 +7,7 @@ import cron from 'node-cron';
 import { checkRainfall } from './rainfallMonitor';
 import { checkAqi } from './aqiMonitor';
 import { checkHeatIndex } from './heatIndexMonitor';
+import { getAllZones } from './zoneRepository';
 
 let isRunning = false;
 
@@ -32,11 +33,18 @@ export async function runTriggerCycle(): Promise<{
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
   try {
-    // Run all monitors concurrently
+    // 1. Fetch current zones from DB
+    const zones = await getAllZones();
+    if (zones.length === 0) {
+      console.log('[Trigger Scheduler] No active zones found. Skipping cycle.');
+      return { rainfall: 0, aqi: 0, heatIndex: 0, totalTriggered: 0, cycleTime: Date.now() - startTime };
+    }
+
+    // 2. Run all monitors concurrently with dynamic zones
     const [rainfallEvents, aqiEvents, heatEvents] = await Promise.all([
-      checkRainfall(),
-      checkAqi(),
-      checkHeatIndex(),
+      checkRainfall(zones),
+      checkAqi(zones),
+      checkHeatIndex(zones),
     ]);
 
     const totalTriggered = rainfallEvents.length + aqiEvents.length + heatEvents.length;
