@@ -21,7 +21,7 @@ const startServer = async () => {
 🌍 Environment: ${config.nodeEnv}
       `);
 
-      // 4. Start Trigger Monitoring Scheduler
+      // 4. Start Trigger Monitoring Scheduler //
       startTriggerScheduler();
     });
   } catch (error) {
