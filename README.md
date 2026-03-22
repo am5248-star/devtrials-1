@@ -124,6 +124,7 @@ Content was rephrased for compliance with licensing restrictions.
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 | Layer | Technology | Reason |
 |---|---|---|
 | Framework | Next.js + React + TypeScript | Single repo for all 3 portals, SSR for performance, type safety |
@@ -133,6 +134,7 @@ Content was rephrased for compliance with licensing restrictions.
 | Maps | Leaflet.js | GPS zone visualization, fraud heatmap |
 
 ### Backend
+
 | Layer | Technology | Reason |
 |---|---|---|
 | API Server | Node.js + Express | Fast development, JSON-native |
@@ -143,6 +145,7 @@ Content was rephrased for compliance with licensing restrictions.
 | Cache | Redis | API rate limit, trigger dedup, session management |
 
 ### ML/AI
+
 | Component | Technology | Purpose |
 |---|---|---|
 | ML Framework | Python + scikit-learn + XGBoost | Premium calculation + fraud detection |
@@ -152,6 +155,7 @@ Content was rephrased for compliance with licensing restrictions.
 | Data Processing | Pandas + NumPy | Feature engineering pipeline |
 
 ### External APIs
+
 | API | Purpose | Cost |
 |---|---|---|
 | OpenWeatherMap | Rain + heat triggers | Free tier (1000 calls/day) |
@@ -161,6 +165,7 @@ Content was rephrased for compliance with licensing restrictions.
 | Razorpay Test Mode | Payment simulation | Free sandbox |
 
 ### Infrastructure
+
 | Component | Technology |
 |---|---|
 | Hosting | Vercel (frontend) + Render (backend + DB) |
@@ -341,6 +346,7 @@ npm run mock:trigger -- --type=rainfall --zone=chennai --intensity=high
 ### Revenue Model (content rephrased for compliance)
 
 Based on document data:
+
 - Premium collected per worker/week: ₹110 (avg)
 - Expected claims rate: ~18% of worker-weeks
 - Avg payout per claim: ₹750
