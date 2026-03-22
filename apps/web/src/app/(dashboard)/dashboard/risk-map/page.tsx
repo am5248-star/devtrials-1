@@ -294,7 +294,7 @@ export default function RiskMapPage() {
                   <h4 className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Overlay Diagnostics</h4>
                 </div>
                 <p className="text-[10px] text-slate-500 font-medium leading-relaxed italic">
-                  * Toggle 'Rain', 'Clouds', and 'Wind' layers in the map control to verify environmental triggers against satellite data.
+                  * Toggle &apos;Rain&apos;, &apos;Clouds&apos;, and &apos;Wind&apos; layers in the map control to verify environmental triggers against satellite data.
                 </p>
               </div>
             </div>

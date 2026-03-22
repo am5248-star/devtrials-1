@@ -29,7 +29,6 @@ import anime from "animejs";
 export default function TriggersPage() {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [loading, setLoading] = useState(true);
-  const [polling, setPolling] = useState(false);
 
   async function loadData() {
     try {
@@ -69,18 +68,6 @@ export default function TriggersPage() {
     }
   }, [loading]);
 
-  async function handleManualPoll() {
-    try {
-      setPolling(true);
-      await manualPoll();
-      await loadData();
-    } catch {
-      alert("Poll failed - server connection issue.");
-    } finally {
-      setPolling(false);
-    }
-  }
-
   return (
     <div className="flex flex-col gap-12">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-10">
@@ -97,15 +84,16 @@ export default function TriggersPage() {
           </p>
         </div>
         <div className="opacity-0 anime-header-item">
-          <Button
-            onClick={handleManualPoll}
-            disabled={polling}
-            size="lg"
-            className="rounded-xl bg-secondary text-white font-bold uppercase h-12 px-8 text-sm shadow-[0_0_20px_rgba(0,183,255,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border-none"
-          >
-            {polling ? <RefreshCcw className="animate-spin" size={18} /> : <Zap className="fill-current" size={18} />}
-            {polling ? "Requesting..." : "Execute Manual Poll"}
-          </Button>
+          <div className="rounded-xl glass border border-white/5 p-4 flex items-center gap-4 group/h">
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">System Synchronized</span>
+              <span className="text-[10px] font-mono text-success">LATEST LIVE DATA</span>
+            </div>
+            <div className="size-10 rounded-lg bg-success/10 flex items-center justify-center relative">
+              <Activity className="size-5 text-success animate-pulse" />
+              <div className="absolute inset-0 bg-success/20 blur-xl animate-pulse opacity-50" />
+            </div>
+          </div>
         </div>
       </header>
 

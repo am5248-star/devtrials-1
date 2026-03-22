@@ -26,28 +26,9 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-/**
- * GET /api/triggers/zones — List all monitored zones.
- */
+// GET /api/triggers/zones — List all monitored zones.
 router.get('/zones', (_req: Request, res: Response) => {
   res.json({ zones: MONITORED_ZONES });
-});
-
-/**
- * POST /api/triggers/poll — Manually trigger a polling cycle.
- * Useful for testing and demos.
- */
-router.post('/poll', async (_req: Request, res: Response) => {
-  try {
-    const result = await runTriggerCycle();
-    res.json({
-      message: 'Polling cycle completed',
-      ...result,
-    });
-  } catch (err) {
-    console.error('Error running manual poll:', err);
-    res.status(500).json({ message: 'Failed to run polling cycle' });
-  }
 });
 
 export default router;

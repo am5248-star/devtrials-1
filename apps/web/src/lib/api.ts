@@ -122,17 +122,6 @@ export async function fetchZones(): Promise<Zone[]> {
   }
 }
 
-export async function manualPoll() {
-  try {
-    const res = await fetch(`${BASE_URL}/api/triggers/poll`, { method: "POST" });
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch (err) {
-    console.warn("Backend unaccessible, mock poll successful");
-    return { success: true, message: "Mock poll completed" };
-  }
-}
-
 export async function fetchHealth() {
   try {
     const res = await fetch(`${BASE_URL}/health`);

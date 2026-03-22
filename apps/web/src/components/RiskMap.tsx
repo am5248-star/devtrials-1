@@ -76,7 +76,9 @@ const RiskMap: React.FC<RiskMapProps> = ({
 
   useEffect(() => {
     // Standard Leaflet fix for missing markers
-    (delete (L.Icon.Default.prototype as any)._getIconUrl);
+    const DefaultIcon = L.Icon.Default as unknown as { prototype: { _getIconUrl?: unknown } };
+    delete DefaultIcon.prototype._getIconUrl;
+    
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: iconRetinaUrl.src,
       iconUrl: iconUrl.src,

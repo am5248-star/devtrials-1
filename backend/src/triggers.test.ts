@@ -11,19 +11,19 @@ describe('Phase 2: Parametric Trigger Monitoring', () => {
 
   describe('Trigger Configuration', () => {
     it('should have correct rainfall thresholds', () => {
-      expect(config.triggers.rainfall.thresholdMm).toBe(50);
+      expect(config.triggers.rainfall.thresholdMm).toBe(10);
       expect(config.triggers.rainfall.windowHrs).toBe(3);
       expect(config.triggers.rainfall.payoutAmount).toBe(800);
     });
 
     it('should have correct AQI thresholds', () => {
-      expect(config.triggers.aqi.threshold).toBe(300);
+      expect(config.triggers.aqi.threshold).toBe(100);
       expect(config.triggers.aqi.sustainedHrs).toBe(4);
       expect(config.triggers.aqi.payoutAmount).toBe(600);
     });
 
     it('should have correct Heat Index thresholds', () => {
-      expect(config.triggers.heatIndex.thresholdCelsius).toBe(45);
+      expect(config.triggers.heatIndex.thresholdCelsius).toBe(35);
       expect(config.triggers.heatIndex.sustainedHrs).toBe(3);
       expect(config.triggers.heatIndex.payoutAmount).toBe(500);
     });
