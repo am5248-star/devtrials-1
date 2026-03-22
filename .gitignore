@@ -145,3 +145,4 @@ skills-lock.json
 opencode.json
 config/mcporter.json
 **/skills/
+.vercel
