@@ -32,6 +32,20 @@ export interface Zone {
   monitoredServices: string[];
 }
 
+export interface FraudRequest {
+  id: string;
+  worker_id: number;
+  zone_name: string;
+  request_type: string;
+  amount: number;
+  status: 'PENDING' | 'PROCESSED' | 'REJECTED' | 'APPROVED';
+  fraud_score?: number;
+  category?: string; // allow any string for decision/category
+  top_signals?: string[];
+  raw_features?: any;
+  created_at: string;
+}
+
 const MOCK_ZONES: Zone[] = [
   { id: "1", name: "Mumbai Central", state: "Maharashtra", center: { lat: 18.9696, lng: 72.8193 }, radius: 50, monitoredServices: ["Rainfall", "AQI"] },
   { id: "2", name: "South Chennai", state: "Tamil Nadu", center: { lat: 13.0827, lng: 80.2707 }, radius: 45, monitoredServices: ["Rainfall", "HeatIndex"] },
@@ -187,4 +201,27 @@ export async function manualPoll() {
     console.warn("Manual poll failed, potential connection issue");
     return null;
   }
+}
+
+export async function fetchFraudRequests(): Promise<FraudRequest[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/fraud/requests`, { cache: 'no-store' });
+    if (!res.ok) throw new Error();
+    return await res.json();
+  } catch (err) {
+    console.warn("Backend fraud service unaccessible, returning mock requests");
+    return [
+      { id: "req_mock_1", worker_id: 1024, zone_name: "Tambaram", request_type: "CLAIM", amount: 1500, status: "PENDING", created_at: new Date().toISOString() },
+      { id: "req_mock_2", worker_id: 2048, zone_name: "T. Nagar", request_type: "CLAIM", amount: 2200, status: "PENDING", created_at: new Date().toISOString() },
+    ];
+  }
+}
+
+export async function scoreFraudRequest(id: string): Promise<FraudRequest> {
+  const res = await fetch(`${BASE_URL}/api/fraud/score/${id}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to score request");
+  return await res.json();
 }
