@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5678";
-const ML_URL = process.env.NEXT_PUBLIC_ML_URL || "http://localhost:8000";
-
+const ML_URL = "http://localhost:8000";
+const RESERVE_ML_URL = "http://localhost:8001";
+const FRAUD_ML_URL = "http://localhost:8002";
 export interface Trigger {
   id: string;
   type: 'Rainfall' | 'AQI' | 'HeatIndex';
@@ -58,11 +59,180 @@ export interface PredictionResponse {
   status: string;
 }
 
+export interface FraudScoreFeatures {
+  worker_id: number;
+  zone_name: string;
+  latency_ms: number;
+  vpn_detected: boolean;
+  dns_leak_detected: boolean;
+  asn_whitelisted: boolean;
+  cell_mismatch_count: number;
+  location_trust_tier: number;
+  mock_location_enabled: boolean;
+  satellite_count: number;
+  altitude_variance: number;
+  is_emulator: boolean;
+  device_cluster_size: number;
+  same_device_accounts: number;
+  behavioral_similarity_score: number;
+  sim_risk_score: number;
+  time_since_sim_change_hrs: number;
+  cluster_suspicious_score: number;
+  cluster_size_last_24h: number;
+  weather_event_confirmed: boolean;
+  account_age_days: number;
+  orders_during_window: number;
+  battery_drain_rate: number;
+  same_bank_accounts: number;
+  zone_priority_mismatch: boolean;
+  cross_zone_claim: boolean;
+}
+
+export interface FraudScoreResponse {
+  raw_score: number;
+  adjusted_score: number;
+  decision: 'AUTO_APPROVE' | 'APPROVE_AUDIT' | 'HOLD_24HR' | 'REJECT_FREEZE';
+  hard_rule_rejection: boolean;
+  rejection_reason: string | null;
+  risk_tier: string;
+  timestamp: string;
+  status: string;
+  top_fraud_signals: string[];
+}
+
+export interface ReserveForecastResponse {
+  zone_id: string;
+  area: string;
+  risk_level: string;
+  predicted_claims_next_7_days: number;
+  predicted_payout_next_7_days: number;
+  reserve_status: 'GREEN' | 'AMBER' | 'RED';
+  status_logic: any;
+}
+
+export interface FraudRequest {
+  id: string;
+  worker_id: string;
+  worker_name?: string;
+  zone_name: string;
+  request_type: string;
+  amount: number;
+  fraud_score?: number;
+  status: 'PENDING' | 'PROCESSED' | 'FAILED';
+  category?: 'SAFE' | 'CLEAN' | 'FRAUD' | 'SUSPICIOUS' | 'HOLD_24HR';
+  top_signals?: string[];
+  created_at: string;
+}
+
+const MOCK_FRAUD_REQUESTS: FraudRequest[] = [
+  {
+    id: "fr-1",
+    worker_id: "W-8821",
+    zone_name: "Mount Road",
+    request_type: "RAIN_CLAIM",
+    amount: 1200,
+    status: "PENDING",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: "fr-2",
+    worker_id: "W-4412",
+    zone_name: "OMR Corridor",
+    request_type: "AQI_CLAIM",
+    amount: 800,
+    fraud_score: 0.82,
+    status: "PROCESSED",
+    category: "SUSPICIOUS",
+    top_signals: ["VPN_DETECTED", "LOCATION_MISMATCH"],
+    created_at: new Date(Date.now() - 3600000).toISOString()
+  },
+  {
+    id: "fr-3",
+    worker_id: "W-9092",
+    zone_name: "Velachery Hub",
+    request_type: "RAIN_CLAIM",
+    amount: 1500,
+    fraud_score: 0.05,
+    status: "PROCESSED",
+    category: "SAFE",
+    top_signals: [],
+    created_at: new Date(Date.now() - 7200000).toISOString()
+  }
+];
+
+export async function fetchFraudRequests(): Promise<FraudRequest[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/fraud/requests`, { cache: 'no-store' });
+    if (!res.ok) throw new Error();
+    return await res.json();
+  } catch (err) {
+    console.warn("Backend unaccessible, returning mock requests");
+    return MOCK_FRAUD_REQUESTS;
+  }
+}
+
+export async function scoreFraudRequest(id: string): Promise<any> {
+    try {
+        const res = await fetch(`${BASE_URL}/api/fraud/requests/${id}/score`, { method: 'POST' });
+        if (!res.ok) throw new Error();
+        return await res.json();
+    } catch (err) {
+        console.warn("Backend unaccessible, mocking score update");
+        // In reality, this would trigger the ML pipeline
+        return { success: true };
+    }
+}
 const MOCK_ZONES: Zone[] = [
   { id: "1", name: "Mumbai Central", state: "Maharashtra", center: { lat: 18.9696, lng: 72.8193 }, radius: 50, monitoredServices: ["Rainfall", "AQI"] },
   { id: "2", name: "South Chennai", state: "Tamil Nadu", center: { lat: 13.0827, lng: 80.2707 }, radius: 45, monitoredServices: ["Rainfall", "HeatIndex"] },
   { id: "3", name: "Bengaluru East", state: "Karnataka", center: { lat: 12.9716, lng: 77.5946 }, radius: 30, monitoredServices: ["AQI", "Rainfall"] },
 ];
+
+export async function fetchFraudScore(features: FraudScoreFeatures): Promise<FraudScoreResponse | null> {
+  try {
+    const res = await fetch(`${FRAUD_ML_URL}/ml/fraud/score`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(features),
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("Fraud Scoring failed");
+    return await res.json();
+  } catch (err) {
+    console.warn("Fraud Service unaccessible, returning safety fallback");
+    return {
+      raw_score: 0.1,
+      adjusted_score: 0.1,
+      decision: "AUTO_APPROVE",
+      hard_rule_rejection: false,
+      rejection_reason: null,
+      risk_tier: "LOW",
+      timestamp: new Date().toISOString(),
+      status: "fallback",
+      top_fraud_signals: [],
+    };
+  }
+}
+
+export async function fetchReserveForecast(zoneId: string): Promise<ReserveForecastResponse | null> {
+  try {
+    const res = await fetch(`${RESERVE_ML_URL}/ml/reserve/forecast/${zoneId}`, { cache: "no-store" });
+    if (!res.ok) throw new Error("Reserve Forecast failed");
+    return await res.json();
+  } catch (err) {
+    console.warn("Reserve Service unaccessible, returning mock data");
+    return {
+      zone_id: zoneId,
+      area: "Unknown",
+      risk_level: "Amber",
+      predicted_claims_next_7_days: 10,
+      predicted_payout_next_7_days: 5000,
+      reserve_status: "AMBER",
+      status_logic: {},
+    };
+  }
+}
+
 
 const MOCK_TRIGGERS: Trigger[] = [
   { id: "t1", type: "Rainfall", zone: "East Coast Road", magnitude: 110.5, timestamp: new Date().toISOString(), payoutAmount: 1200, status: "PENDING" },
@@ -246,5 +416,23 @@ export async function fetchPrediction(features: PredictionFeatures): Promise<Pre
       tier_probabilities: { LOW: 0.2, MEDIUM: 0.7, HIGH: 0.1 },
       status: 'fallback'
     };
+  }
+}
+
+export async function fetchMLHealth(): Promise<{ pricing: boolean; reserve: boolean; fraud: boolean }> {
+  try {
+    const results = await Promise.allSettled([
+      fetch(ML_URL + "/"),
+      fetch(RESERVE_ML_URL + "/"),
+      fetch(FRAUD_ML_URL + "/")
+    ]);
+
+    return {
+      pricing: results[0].status === "fulfilled" && (results[0] as PromiseFulfilledResult<Response>).value.ok,
+      reserve: results[1].status === "fulfilled" && (results[1] as PromiseFulfilledResult<Response>).value.ok,
+      fraud: results[2].status === "fulfilled" && (results[2] as PromiseFulfilledResult<Response>).value.ok,
+    };
+  } catch (err) {
+    return { pricing: false, reserve: false, fraud: false };
   }
 }

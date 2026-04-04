@@ -13,7 +13,8 @@ import {
   Globe,
   ShieldCheck,
   LogIn,
-  Activity
+  Activity,
+  Cpu
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -40,6 +41,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { fetchMLHealth } from "@/lib/api";
 import { useState, useEffect } from "react";
 
 export function AppHeader() {
@@ -52,6 +54,7 @@ export function AppHeader() {
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [hasNotifications, setHasNotifications] = useState(true);
+  const [mlStatus, setMlStatus] = useState<boolean>(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -61,7 +64,18 @@ export function AppHeader() {
       }
     };
     document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+
+    const checkML = async () => {
+      const status = await fetchMLHealth();
+      setMlStatus(status.pricing && status.reserve && status.fraud);
+    };
+    checkML();
+    const interval = setInterval(checkML, 30000);
+
+    return () => {
+      document.removeEventListener("keydown", down);
+      clearInterval(interval);
+    };
   }, []);
   
   return (
@@ -81,6 +95,12 @@ export function AppHeader() {
           <SidebarTrigger className="hover:bg-primary/10 transition-colors rounded-lg" />
         )}
         <Separator orientation="vertical" className="h-4 bg-white/[0.06] hidden md:block" />
+        <div className="hidden xl:flex items-center gap-3">
+          <div className="flex items-center gap-2 group cursor-pointer hover:bg-white/[0.03] px-3 py-1.5 rounded-lg transition-colors border border-white/[0.05]">
+            <Cpu className={cn("size-3.5 transition-colors", mlStatus ? "text-fs-blue shadow-[0_0_10px_rgba(0,122,255,0.4)]" : "text-muted-foreground")} />
+            <span className="text-[10px] font-black uppercase tracking-widest text-white">ML Core {mlStatus ? 'Active' : 'Offline'}</span>
+          </div>
+        </div>
         <div className="hidden lg:flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg glass-subtle text-[10px] font-black uppercase tracking-[0.12em] border-none">
             <Globe className="size-3.5 text-secondary animate-pulse" />

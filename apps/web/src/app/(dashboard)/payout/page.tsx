@@ -13,12 +13,15 @@ import {
   Calculator,
   ArrowUpRight
 } from "lucide-react";
-import { fetchPrediction, PredictionResponse } from "@/lib/api";
+import { fetchPrediction, PredictionResponse, fetchFraudScore, fetchReserveForecast, FraudScoreResponse, ReserveForecastResponse } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import anime from "animejs";
 
 export default function PayoutPage() {
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
+  const [fraudResult, setFraudResult] = useState<FraudScoreResponse | null>(null);
+  const [reserveResult, setReserveResult] = useState<ReserveForecastResponse | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Default worker stats
@@ -27,12 +30,18 @@ export default function PayoutPage() {
 
   useEffect(() => {
     async function loadData() {
-      const data = await fetchPrediction({
-        flood_risk_score: 0.2, // Mock current data
-        rainfall_last_7d_mm: 45.0,
-        is_monsoon_season: 1
-      });
-      setPrediction(data);
+      // Parallel fetch for prediction and reserve
+      const [pData, rData] = await Promise.all([
+        fetchPrediction({
+          flood_risk_score: 0.2,
+          rainfall_last_7d_mm: 45.0,
+          is_monsoon_season: 1
+        }),
+        fetchReserveForecast("chennai_1")
+      ]);
+
+      setPrediction(pData);
+      setReserveResult(rData);
       setLoading(false);
 
       // Intro animation
@@ -48,11 +57,54 @@ export default function PayoutPage() {
     loadData();
   }, []);
 
+  const handlePayoutSubmit = async () => {
+    setIsSubmitting(true);
+    // Mock features for fraud scoring
+    const result = await fetchFraudScore({
+      worker_id: 1234,
+      zone_name: "South Chennai",
+      latency_ms: 120,
+      vpn_detected: false,
+      dns_leak_detected: false,
+      asn_whitelisted: true,
+      cell_mismatch_count: 0,
+      location_trust_tier: 1,
+      mock_location_enabled: false,
+      satellite_count: 12,
+      altitude_variance: 0.5,
+      is_emulator: false,
+      device_cluster_size: 1,
+      same_device_accounts: 1,
+      behavioral_similarity_score: 0.1,
+      sim_risk_score: 0.05,
+      time_since_sim_change_hrs: 2400,
+      cluster_suspicious_score: 0.02,
+      cluster_size_last_24h: 5,
+      weather_event_confirmed: true,
+      account_age_days: 180,
+      orders_during_window: 12,
+      battery_drain_rate: 0.05,
+      same_bank_accounts: 1,
+      zone_priority_mismatch: false,
+      cross_zone_claim: false
+    });
+    setFraudResult(result);
+    setIsSubmitting(false);
+  };
+
   const getTierColor = (tier: string) => {
     switch (tier) {
       case 'HIGH': return 'text-destructive shadow-[0_0_15px_rgba(255,45,85,0.4)]';
       case 'MEDIUM': return 'text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]';
       default: return 'text-success shadow-[0_0_15px_rgba(16,185,129,0.4)]';
+    }
+  };
+
+  const getReserveColor = (status: string) => {
+    switch (status) {
+      case 'RED': return 'bg-destructive shadow-[0_0_10px_rgba(255,45,85,0.4)]';
+      case 'AMBER': return 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]';
+      default: return 'bg-success shadow-[0_0_10px_rgba(16,185,129,0.4)]';
     }
   };
 
@@ -126,9 +178,11 @@ export default function PayoutPage() {
                 </div>
                 <span className="text-xs text-muted-foreground font-medium">1.2k workers protected in this zone</span>
               </div>
-              <button className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-primary hover:gap-2 transition-all group">
-                Review Policy <ChevronRight className="size-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Liquidity:</span>
+                <div className={cn("size-2 rounded-full", getReserveColor(reserveResult?.reserve_status || 'AMBER'))} />
+                <span className="text-xs font-bold">{reserveResult?.reserve_status || 'CHECKING...'}</span>
+              </div>
             </div>
           </div>
 
@@ -154,17 +208,17 @@ export default function PayoutPage() {
 
             <div className="anime-payout-card glass rounded-2xl p-5 border border-white/[0.06]">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-500">
+                <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-500">
                   <TrendingUp className="size-5" />
                 </div>
-                <span className="text-sm font-bold uppercase tracking-wider">Forecast Trend</span>
+                <span className="text-sm font-bold uppercase tracking-wider">Reserve Forecast</span>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full border-2 border-amber-500/30 border-t-amber-500 animate-spin" />
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold">Stable</span>
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Next 48 Hours</span>
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between items-end">
+                  <span className="text-2xl font-display font-bold">₹{reserveResult?.predicted_payout_next_7_days.toLocaleString() || '---'}</span>
+                  <span className="text-[10px] font-bold text-emerald-500 uppercase">7D Potential</span>
                 </div>
+                <p className="text-[10px] text-muted-foreground mt-2 font-medium">Predicted claims: {reserveResult?.predicted_claims_next_7_days || '--'}</p>
               </div>
             </div>
           </div>
@@ -211,10 +265,46 @@ export default function PayoutPage() {
               </div>
             </div>
 
-            <button className="w-full py-4 rounded-2xl bg-primary text-white font-black uppercase tracking-[0.2em] text-sm shadow-[0_10px_30px_rgba(255,70,37,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group">
-              Submit Payout Request
-              <ArrowUpRight className="size-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
-            </button>
+            {!fraudResult ? (
+              <button 
+                onClick={handlePayoutSubmit}
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-2xl bg-primary text-white font-black uppercase tracking-[0.2em] text-sm shadow-[0_10px_30px_rgba(255,70,37,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Analyzing Risk..." : "Validate Payout Request"}
+                <ArrowUpRight className="size-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+              </button>
+            ) : (
+              <div id="fraud-analysis" className="p-6 rounded-2xl bg-white/[0.04] border-2 border-primary/20 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Fraud Analysis</span>
+                  <span className={cn(
+                    "px-3 py-1 rounded-full text-[10px] font-black uppercase",
+                    fraudResult.decision === 'AUTO_APPROVE' ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
+                  )}>
+                    {fraudResult.decision}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase block mb-1">Risk Score</span>
+                    <div className="h-1.5 w-full bg-white/[0.05] rounded-full overflow-hidden">
+                      <div className="h-full bg-primary" style={{ width: `${fraudResult.adjusted_score * 100}%` }} />
+                    </div>
+                  </div>
+                  <span className="text-lg font-display font-black">{(fraudResult.adjusted_score * 100).toFixed(0)}%</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground italic">
+                  Signals: {fraudResult.top_fraud_signals.length > 0 ? fraudResult.top_fraud_signals.join(', ') : 'No suspicious patterns detected.'}
+                </p>
+                <button 
+                  onClick={() => setFraudResult(null)}
+                  className="w-full py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors"
+                >
+                  Reset Analysis
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Info Card */}

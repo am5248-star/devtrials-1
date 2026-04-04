@@ -18,7 +18,7 @@ threshold=
 decision_type=
 left_child=
 right_child=
-leaf_value=0.84729786038720345
+leaf_value=0.40546510810816422
 leaf_weight=
 leaf_count=10
 internal_value=
@@ -44,7 +44,7 @@ parameters:
 [num_iterations: 10]
 [learning_rate: 0.1]
 [num_leaves: 31]
-[num_threads: 10]
+[num_threads: 24]
 [seed: 0]
 [deterministic: 0]
 [force_col_wise: 0]

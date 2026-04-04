@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import StatsCard from "@/components/StatsCard";
 import TriggerTable from "@/components/TriggerTable";
-import { fetchTriggers, fetchZones, fetchHealth, Trigger, Zone } from "@/lib/api";
+import { fetchTriggers, fetchZones, fetchHealth, fetchMLHealth, Trigger, Zone } from "@/lib/api";
 import { RefreshCcw, Activity as ActivityIcon, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import anime from "animejs";
@@ -14,6 +14,11 @@ export default function DashboardPage() {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [zones, setZones] = useState<Zone[]>([]);
   const [health, setHealth] = useState<boolean>(false);
+  const [mlHealth, setMlHealth] = useState<{ pricing: boolean; reserve: boolean; fraud: boolean }>({
+    pricing: false,
+    reserve: false,
+    fraud: false
+  });
   const [loading, setLoading] = useState(true);
 
   async function init() {
@@ -27,10 +32,16 @@ export default function DashboardPage() {
         console.warn("Manual poll failed, using existing cache", pollErr);
       }
 
-      const [t, z, h] = await Promise.all([fetchTriggers(), fetchZones(), fetchHealth()]);
+      const [t, z, h, mlH] = await Promise.all([
+        fetchTriggers(),
+        fetchZones(),
+        fetchHealth(),
+        fetchMLHealth()
+      ]);
       setTriggers(t);
       setZones(z);
       setHealth(h);
+      setMlHealth(mlH);
     } catch (err) {
       console.error("Data fetch error", err);
     } finally {
@@ -190,13 +201,29 @@ export default function DashboardPage() {
             <ActivityIcon className="size-20 text-secondary" />
           </div>
           <div className="relative z-10 space-y-4">
-            <h4 className="text-3xl font-display font-black tracking-tight uppercase">Health Metrics</h4>
-            <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-              Global monitoring nodes are operating within normal latency thresholds. Data ingestion pipeline v4.0 is active across all regions.
-            </p>
-            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-secondary">
-              Latency: 24ms
-              <div className="size-2 bg-secondary rounded-full" />
+            <h4 className="text-3xl font-display font-black tracking-tight uppercase">Intelligence Health</h4>
+            <div className="grid grid-cols-1 gap-2 mt-4">
+              <div className="flex items-center justify-between text-xs px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                <span className="text-muted-foreground font-bold uppercase">Pricing Engine</span>
+                <div className="flex items-center gap-2">
+                  <div className={`size-1.5 rounded-full ${mlHealth.pricing ? 'bg-success' : 'bg-destructive'}`} />
+                  <span className="font-black uppercase">{mlHealth.pricing ? 'Live' : 'Offline'}</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-xs px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                <span className="text-muted-foreground font-bold uppercase">Reserve Forecast</span>
+                <div className="flex items-center gap-2">
+                  <div className={`size-1.5 rounded-full ${mlHealth.reserve ? 'bg-success' : 'bg-destructive'}`} />
+                  <span className="font-black uppercase">{mlHealth.reserve ? 'Live' : 'Offline'}</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-xs px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                <span className="text-muted-foreground font-bold uppercase">Fraud Guard</span>
+                <div className="flex items-center gap-2">
+                  <div className={`size-1.5 rounded-full ${mlHealth.fraud ? 'bg-success' : 'bg-destructive'}`} />
+                  <span className="font-black uppercase">{mlHealth.fraud ? 'Live' : 'Offline'}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
